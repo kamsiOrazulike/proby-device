@@ -29,11 +29,16 @@ export default function Dashboard() {
   const [data, setData] = useState<SensorReading[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
+  const [isFetching, setIsFetching] = useState(true);
   const chartRef = useRef<HTMLCanvasElement>(null);
   const chartInstance = useRef<Chart | null>(null);
+  const lastDataLength = useRef(0);
+  const unchangedCount = useRef(0);
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!isFetching) return;
+
       try {
         const res = await fetch("/api/readings");
         if (!res.ok) {
@@ -41,19 +46,46 @@ export default function Dashboard() {
           throw new Error(errorData.error || "Failed to fetch");
         }
         const readings = await res.json();
+
+        // Check if we have the same data as before
+        if (readings.length === lastDataLength.current) {
+          unchangedCount.current += 1;
+
+          // If data hasn't changed for 10 consecutive checks (10 seconds with 1s interval)
+          if (unchangedCount.current >= 10) {
+            console.log("No new data detected for 10 seconds, stopping fetch");
+            setIsFetching(false);
+            return;
+          }
+        } else {
+          // Reset counter if data has changed
+          unchangedCount.current = 0;
+          lastDataLength.current = readings.length;
+        }
+
         setData(readings);
         setLastUpdate(new Date());
         setError(null);
       } catch (err) {
         console.error("Fetch error:", err);
         setError(err instanceof Error ? err.message : "Failed to fetch data");
+        // Optional: stop fetching on error
+        // setIsFetching(false);
       }
     };
 
-    fetchData();
-    const interval = setInterval(fetchData, 1000); //time interval
-    return () => clearInterval(interval);
-  }, []);
+    if (isFetching) {
+      fetchData();
+      const interval = setInterval(fetchData, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [isFetching]);
+
+  // Function to manually restart fetching
+  const restartFetching = () => {
+    unchangedCount.current = 0;
+    setIsFetching(true);
+  };
 
   useEffect(() => {
     if (!chartRef.current || !data.length) return;
@@ -73,8 +105,8 @@ export default function Dashboard() {
           {
             label: "Microbial Activity (Cfu)",
             data: data.map((d) => d.microbial_activity),
-            backgroundColor: "rgb(75, 192, 192)",
-            borderColor: "rgb(75, 192, 192)",
+            backgroundColor: "#066E19",
+            borderColor: "#066E19",
             tension: 0.1,
           },
         ],
@@ -123,6 +155,7 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-1 gap-4 my-12">
           <ReadingCard
             title="Microbial Activity"
+            subtitle="The presence of microbes picked up by the sensor"
             value={latestReading}
             unit="Cfu"
           />
@@ -139,10 +172,24 @@ export default function Dashboard() {
             Error: {error}
           </div>
         )}
+
+        {!isFetching && (
+          <div className="flex justify-center mt-4">
+            <button
+              onClick={restartFetching}
+              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-colors"
+            >
+              Resume Data Collection
+            </button>
+          </div>
+        )}
       </main>
 
       <footer className="mt-2 text-center text-sm">
-        Last updated: {lastUpdateTime}
+        <div>Last updated: {lastUpdateTime}</div>
+        <div className="mt-1">
+          Status: {isFetching ? "Collecting data..." : "Data collection paused"}
+        </div>
       </footer>
     </div>
   );
