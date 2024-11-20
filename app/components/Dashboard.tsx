@@ -51,7 +51,7 @@ export default function Dashboard() {
     };
 
     fetchData();
-    const interval = setInterval(fetchData, 2000); //time interval
+    const interval = setInterval(fetchData, 1000); //time interval
     return () => clearInterval(interval);
   }, []);
 
