@@ -7,25 +7,25 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState<"home" | "data">("home");
 
   return (
-    <div className="bg-yellow-200 text-black min-h-screen">
+    <div className="bg-gray-200 text-black min-h-screen">
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="flex items-center mb-8">
+        <div className="relative rounded-full mb-8">
           <button
             onClick={() => setActiveTab("home")}
-            className={`mr-2 px-6 py-2 rounded-xl transition-colors ${
+            className={`mr-2 px-6 py-2 rounded-full transition-colors duration-150 ${
               activeTab === "home"
-                ? "bg-black text-yellow-200"
-                : "bg-yellow-300 hover:bg-yellow-400"
+                ? "bg-black text-gray-200"
+                : "bg-gray-300 hover:bg-black/70 hover:text-gray-200"
             }`}
           >
             Alerts
           </button>
           <button
             onClick={() => setActiveTab("data")}
-            className={`px-6 py-2 rounded-xl transition-colors ${
+            className={`px-6 py-2 rounded-full transition-colors duration-150 ${
               activeTab === "data"
-                ? "bg-black text-yellow-200"
-                : "bg-yellow-300 hover:bg-yellow-400"
+                ? "bg-black text-gray-200"
+                : "bg-gray-300 hover:bg-black/70 hover:text-gray-200"
             }`}
           >
             Dashboard

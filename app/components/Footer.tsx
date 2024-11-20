@@ -2,7 +2,7 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <div className="bottom-0 bg-yellow-300 text-black">
+    <div className="bottom-0 bg-gray-300 text-black">
       <footer className="py-4 text-center">
         © 2024 Sensor Monitor - NutriTech
       </footer>
