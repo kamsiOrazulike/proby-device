@@ -3,6 +3,7 @@ export interface SensorReading {
   temperature: number;
   humidity: number;
   pressure: number;
+  microbialActivity: number;
   timestamp?: string;
 }
 

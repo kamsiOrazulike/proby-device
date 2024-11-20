@@ -26,12 +26,32 @@ Chart.register(
   LineController
 );
 
-export default function Home() {
+export default function Dashboard() {
   const [data, setData] = useState<SensorReading[]>([]);
   const [error, setError] = useState<string | null>(null);
   const chartRef = useRef<HTMLCanvasElement>(null);
   const chartInstance = useRef<Chart | null>(null);
 
+  // Fetch data every second
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch("/api/readings");
+        if (!res.ok) throw new Error("Failed to fetch");
+        const readings = await res.json();
+        setData(readings);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to fetch data");
+      }
+    };
+
+    fetchData(); // Initial fetch
+    const interval = setInterval(fetchData, 1000); // Fetch every second
+
+    return () => clearInterval(interval); // Cleanup
+  }, []);
+
+  // Update chart when data changes
   useEffect(() => {
     if (!chartRef.current) return;
 
@@ -45,24 +65,13 @@ export default function Home() {
     chartInstance.current = new Chart(ctx, {
       type: "line",
       data: {
-        labels: data.map((d) => d.timestamp),
+        labels: data.map((d) => new Date(d.timestamp).toLocaleTimeString()),
         datasets: [
           {
-            label: "Temperature (°C)",
-            data: data.map((d) => d.temperature),
-            backgroundColor: "rgb(255, 99, 132)",
-            tension: 0.1,
-          },
-          {
-            label: "Humidity (%)",
-            data: data.map((d) => d.humidity),
-            backgroundColor: "rgb(54, 162, 235)",
-            tension: 0.1,
-          },
-          {
-            label: "Pressure (hPa)",
-            data: data.map((d) => d.pressure),
+            label: "Microbial Activity (Cfu)",
+            data: data.map((d) => d.microbialActivity),
             backgroundColor: "rgb(75, 192, 192)",
+            borderColor: "rgb(75, 192, 192)",
             tension: 0.1,
           },
         ],
@@ -73,6 +82,16 @@ export default function Home() {
         scales: {
           y: {
             beginAtZero: false,
+            title: {
+              display: true,
+              text: "Colony Forming Units (Cfu)",
+            },
+          },
+          x: {
+            title: {
+              display: true,
+              text: "Time",
+            },
           },
         },
       },
@@ -85,62 +104,21 @@ export default function Home() {
     };
   }, [data]);
 
-  useEffect(() => {
-    const fetchData = async (): Promise<void> => {
-      try {
-        const res = await fetch("/api/readings");
-        if (!res.ok) throw new Error("Failed to fetch");
-        const readings: SensorReading[] = await res.json();
-        setData(readings);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to fetch data");
-      }
-    };
-
-    const ws = new WebSocket(
-      process.env.NEXT_PUBLIC_WS_URL || "ws://localhost:3000"
-    );
-
-    ws.onmessage = (event: MessageEvent): void => {
-      try {
-        const newReading: SensorReading = JSON.parse(event.data);
-        setData((prev) => [...prev.slice(-49), newReading]);
-      } catch (err) {
-        setError("Error processing websocket data");
-      }
-    };
-
-    fetchData();
-    return () => ws.close();
-  }, []);
-
   return (
     <div className="bg-yellow-200 text-black min-h-screen p-4 sm:p-8">
       <main className="max-w-7xl mx-auto space-y-4">
         <h1 className="text-3xl sm:text-4xl font-bold -mt-2">
-          Sensor Dashboard
+          Sensor Readings
         </h1>
 
-        {/* Cards - stack on mobile, grid on larger screens */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 my-12">
-          <ReadingCard
-            title="Temperature"
-            value={data[data.length - 1]?.temperature ?? "-"}
-            unit="°C"
-          />
-          <ReadingCard
-            title="Humidity"
-            value={data[data.length - 1]?.humidity ?? "-"}
-            unit="%"
-          />
+        <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-1 gap-4 my-12">
           <ReadingCard
             title="Microbial Activity"
-            value={data[data.length - 1]?.pressure ?? "-"}
+            value={data[0]?.microbialActivity ?? "-"}
             unit="Cfu"
           />
         </div>
 
-        {/* Scrollable chart container */}
         <div className="overflow-x-auto">
           <div className="min-w-[600px] h-[300px] sm:h-[400px] my-12">
             <canvas ref={chartRef} />
@@ -151,7 +129,10 @@ export default function Home() {
       </main>
 
       <footer className="mt-8 text-center text-sm">
-        Last updated: {data[data.length - 1]?.timestamp || "No data"}
+        Last updated:{" "}
+        {data[0]?.timestamp
+          ? new Date(data[0].timestamp).toLocaleString()
+          : "No data"}
       </footer>
     </div>
   );
