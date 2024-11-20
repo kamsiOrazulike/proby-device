@@ -46,7 +46,7 @@ export default function Dashboard() {
     };
 
     fetchData(); // Initial fetch
-    const interval = setInterval(fetchData, 1000); // Fetch every second
+    const interval = setInterval(fetchData, 5000); // Fetch every 5 seconds
 
     return () => clearInterval(interval); // Cleanup
   }, []);
