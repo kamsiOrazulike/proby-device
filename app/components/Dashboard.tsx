@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { useEffect, useState, useRef } from "react";
 import {
@@ -29,31 +28,35 @@ Chart.register(
 export default function Dashboard() {
   const [data, setData] = useState<SensorReading[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
   const chartRef = useRef<HTMLCanvasElement>(null);
   const chartInstance = useRef<Chart | null>(null);
 
-  // Fetch data every second
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await fetch("/api/readings");
-        if (!res.ok) throw new Error("Failed to fetch");
+        if (!res.ok) {
+          const errorData = await res.json();
+          throw new Error(errorData.error || "Failed to fetch");
+        }
         const readings = await res.json();
         setData(readings);
+        setLastUpdate(new Date());
+        setError(null);
       } catch (err) {
+        console.error("Fetch error:", err);
         setError(err instanceof Error ? err.message : "Failed to fetch data");
       }
     };
 
-    fetchData(); // Initial fetch
-    const interval = setInterval(fetchData, 5000); // Fetch every 5 seconds
-
-    return () => clearInterval(interval); // Cleanup
+    fetchData();
+    const interval = setInterval(fetchData, 5000);
+    return () => clearInterval(interval);
   }, []);
 
-  // Update chart when data changes
   useEffect(() => {
-    if (!chartRef.current) return;
+    if (!chartRef.current || !data.length) return;
 
     if (chartInstance.current) {
       chartInstance.current.destroy();
@@ -79,6 +82,9 @@ export default function Dashboard() {
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        animation: {
+          duration: 0,
+        },
         scales: {
           y: {
             beginAtZero: false,
@@ -104,6 +110,9 @@ export default function Dashboard() {
     };
   }, [data]);
 
+  const latestReading = data[0]?.microbial_activity ?? "-";
+  const lastUpdateTime = lastUpdate?.toLocaleString() ?? "No data";
+
   return (
     <div className="bg-yellow-200 text-black min-h-screen p-4 sm:p-8">
       <main className="max-w-7xl mx-auto space-y-4">
@@ -114,7 +123,7 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-1 gap-4 my-12">
           <ReadingCard
             title="Microbial Activity"
-            value={data[0]?.microbial_activity ?? "-"}
+            value={latestReading}
             unit="Cfu"
           />
         </div>
@@ -125,14 +134,15 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {error && <div className="text-red-500">Error: {error}</div>}
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+            Error: {error}
+          </div>
+        )}
       </main>
 
-      <footer className="mt-8 text-center text-sm">
-        Last updated:{" "}
-        {data[0]?.created_at
-          ? new Date(data[0].created_at).toLocaleString()
-          : "No data"}
+      <footer className="mt-2 text-center text-sm">
+        Last updated: {lastUpdateTime}
       </footer>
     </div>
   );
