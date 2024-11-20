@@ -65,11 +65,11 @@ export default function Dashboard() {
     chartInstance.current = new Chart(ctx, {
       type: "line",
       data: {
-        labels: data.map((d) => new Date(d.timestamp).toLocaleTimeString()),
+        labels: data.map((d) => new Date(d.created_at).toLocaleTimeString()),
         datasets: [
           {
             label: "Microbial Activity (Cfu)",
-            data: data.map((d) => d.microbialActivity),
+            data: data.map((d) => d.microbial_activity),
             backgroundColor: "rgb(75, 192, 192)",
             borderColor: "rgb(75, 192, 192)",
             tension: 0.1,
@@ -114,7 +114,7 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-1 gap-4 my-12">
           <ReadingCard
             title="Microbial Activity"
-            value={data[0]?.microbialActivity ?? "-"}
+            value={data[0]?.microbial_activity ?? "-"}
             unit="Cfu"
           />
         </div>
@@ -130,8 +130,8 @@ export default function Dashboard() {
 
       <footer className="mt-8 text-center text-sm">
         Last updated:{" "}
-        {data[0]?.timestamp
-          ? new Date(data[0].timestamp).toLocaleString()
+        {data[0]?.created_at
+          ? new Date(data[0].created_at).toLocaleString()
           : "No data"}
       </footer>
     </div>

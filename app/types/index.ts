@@ -1,10 +1,7 @@
 export interface SensorReading {
-  id?: number;
-  temperature: number;
-  humidity: number;
-  pressure: number;
-  microbialActivity: number;
-  timestamp?: string;
+  id: number;
+  microbial_activity: number;
+  created_at: string;
 }
 
 export interface ReadingCardProps {
