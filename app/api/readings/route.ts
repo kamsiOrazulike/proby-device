@@ -14,15 +14,10 @@ export async function GET() {
       .order("created_at", { ascending: false })
       .limit(50);
 
-    if (error) {
-      console.error("Supabase GET error:", error);
-      throw error;
-    }
-
-    console.log("Fetched readings:", data?.length);
+    if (error) throw error;
     return NextResponse.json(data);
   } catch (error) {
-    console.error("Error in GET route:", error);
+    console.error("GET Error:", error);
     return NextResponse.json(
       { error: "Failed to fetch readings" },
       { status: 500 }
@@ -33,27 +28,36 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    console.log("Received POST data:", body);
+    console.log("Received data:", body);
 
-    if (!body.microbial_activity && body.microbial_activity !== 0) {
-      throw new Error("Missing microbial_activity in request body");
+    const insertData = {
+      microbial_activity: Number(body.microbial_activity),
+      temperature: Number(body.temperature),
+      humidity: Number(body.humidity),
+    };
+
+    // Add validation
+    if (isNaN(insertData.temperature) || isNaN(insertData.humidity)) {
+      console.error("Invalid temperature or humidity values:", body);
+      return NextResponse.json(
+        { error: "Invalid temperature or humidity values" },
+        { status: 400 }
+      );
     }
+
+    console.log("Inserting data:", insertData);
 
     const { data, error } = await supabase
       .from("sensor_readings")
-      .insert([{ microbial_activity: body.microbial_activity }])
+      .insert([insertData])
       .select()
       .single();
 
-    if (error) {
-      console.error("Supabase POST error:", error);
-      throw error;
-    }
+    if (error) throw error;
 
-    console.log("Saved reading:", data);
     return NextResponse.json(data);
   } catch (error) {
-    console.error("Error in POST route:", error);
+    console.error("POST Error:", error);
     return NextResponse.json(
       { error: "Failed to save reading" },
       { status: 500 }

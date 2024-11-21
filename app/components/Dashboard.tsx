@@ -29,16 +29,11 @@ export default function Dashboard() {
   const [data, setData] = useState<SensorReading[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
-  const [isFetching, setIsFetching] = useState(true);
   const chartRef = useRef<HTMLCanvasElement>(null);
   const chartInstance = useRef<Chart | null>(null);
-  const lastDataLength = useRef(0);
-  const unchangedCount = useRef(0);
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!isFetching) return;
-
       try {
         const res = await fetch("/api/readings");
         if (!res.ok) {
@@ -46,46 +41,19 @@ export default function Dashboard() {
           throw new Error(errorData.error || "Failed to fetch");
         }
         const readings = await res.json();
-
-        // Check if we have the same data as before
-        if (readings.length === lastDataLength.current) {
-          unchangedCount.current += 1;
-
-          // If data hasn't changed for 10 consecutive checks (10 seconds with 1s interval)
-          if (unchangedCount.current >= 10) {
-            console.log("No new data detected for 10 seconds, stopping fetch");
-            setIsFetching(false);
-            return;
-          }
-        } else {
-          // Reset counter if data has changed
-          unchangedCount.current = 0;
-          lastDataLength.current = readings.length;
-        }
-
         setData(readings);
         setLastUpdate(new Date());
         setError(null);
       } catch (err) {
         console.error("Fetch error:", err);
         setError(err instanceof Error ? err.message : "Failed to fetch data");
-        // Optional: stop fetching on error
-        // setIsFetching(false);
       }
     };
 
-    if (isFetching) {
-      fetchData();
-      const interval = setInterval(fetchData, 1000);
-      return () => clearInterval(interval);
-    }
-  }, [isFetching]);
-
-  // Function to manually restart fetching
-  const restartFetching = () => {
-    unchangedCount.current = 0;
-    setIsFetching(true);
-  };
+    fetchData();
+    const interval = setInterval(fetchData, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     if (!chartRef.current || !data.length) return;
@@ -109,6 +77,20 @@ export default function Dashboard() {
             borderColor: "#066E19",
             tension: 0.1,
           },
+          {
+            label: "Temperature (°C)",
+            data: data.map((d) => d.temperature),
+            backgroundColor: "#DC2626",
+            borderColor: "#DC2626",
+            tension: 0.1,
+          },
+          {
+            label: "Humidity (%)",
+            data: data.map((d) => d.humidity),
+            backgroundColor: "#2563EB",
+            borderColor: "#2563EB",
+            tension: 0.1,
+          },
         ],
       },
       options: {
@@ -122,7 +104,7 @@ export default function Dashboard() {
             beginAtZero: false,
             title: {
               display: true,
-              text: "Colony Forming Units (Cfu)",
+              text: "Values",
             },
           },
           x: {
@@ -142,22 +124,40 @@ export default function Dashboard() {
     };
   }, [data]);
 
-  const latestReading = data[0]?.microbial_activity ?? "-";
+  const latestReadings = {
+    microbial: data[0]?.microbial_activity ?? "-",
+    temperature: data[0]?.temperature ? data[0].temperature.toFixed(1) : "-",
+    humidity: data[0]?.humidity ? data[0].humidity.toFixed(1) : "-",
+  };
+
   const lastUpdateTime = lastUpdate?.toLocaleString() ?? "No data";
 
   return (
     <div className="bg-gray-200 text-black min-h-screen p-4 sm:p-8">
       <main className="max-w-7xl mx-auto space-y-4">
-        <h1 className="text-3xl sm:text-4xl font-bold -mt-2">
+        <h1 className="flex flex-col text-3xl sm:text-4xl font-bold -mt-2">
           Sensor Readings
+          <span className="text-sm font-light">Last updated: {lastUpdateTime}</span>
         </h1>
 
-        <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-1 gap-4 my-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 my-12">
           <ReadingCard
             title="Microbial Activity"
             subtitle="The presence of microbes picked up by the sensor"
-            value={latestReading}
+            value={latestReadings.microbial}
             unit="Cfu"
+          />
+          <ReadingCard
+            title="Temperature"
+            subtitle="Current environmental temperature"
+            value={latestReadings.temperature}
+            unit="°C"
+          />
+          <ReadingCard
+            title="Humidity"
+            subtitle="Relative humidity in the environment"
+            value={latestReadings.humidity}
+            unit="%"
           />
         </div>
 
@@ -172,25 +172,7 @@ export default function Dashboard() {
             Error: {error}
           </div>
         )}
-
-        {!isFetching && (
-          <div className="flex justify-center mt-4">
-            <button
-              onClick={restartFetching}
-              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-colors"
-            >
-              Resume Data Collection
-            </button>
-          </div>
-        )}
       </main>
-
-      <footer className="mt-2 text-center text-sm">
-        <div>Last updated: {lastUpdateTime}</div>
-        <div className="mt-1">
-          Status: {isFetching ? "Collecting data..." : "Data collection paused"}
-        </div>
-      </footer>
     </div>
   );
 }

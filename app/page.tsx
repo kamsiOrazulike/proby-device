@@ -12,20 +12,20 @@ export default function Home() {
         <div className="relative rounded-full mb-8">
           <button
             onClick={() => setActiveTab("home")}
-            className={`mr-2 px-6 py-2 rounded-full transition-colors duration-150 ${
+            className={`mr-1 px-4 py-2 rounded-full transition-colors duration-150 ${
               activeTab === "home"
-                ? "bg-black text-gray-200"
-                : "bg-gray-300 hover:bg-black/70 hover:text-gray-200"
+                ? "text-black"
+                : "text-black/30 hover:text-black"
             }`}
           >
             Alerts
           </button>
           <button
             onClick={() => setActiveTab("data")}
-            className={`px-6 py-2 rounded-full transition-colors duration-150 ${
+            className={`px-4 py-2 rounded-full transition-colors duration-150 ${
               activeTab === "data"
-                ? "bg-black text-gray-200"
-                : "bg-gray-300 hover:bg-black/70 hover:text-gray-200"
+                ? "text-black"
+                : "text-black/30 hover:text-black"
             }`}
           >
             Dashboard
