@@ -29,8 +29,11 @@ export default function Dashboard() {
   const [data, setData] = useState<SensorReading[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
+  const [isPaused, setIsPaused] = useState(false);
   const chartRef = useRef<HTMLCanvasElement>(null);
   const chartInstance = useRef<Chart | null>(null);
+  const lastReadingId = useRef<number | null>(null);
+  const noChangeCount = useRef(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -41,19 +44,32 @@ export default function Dashboard() {
           throw new Error(errorData.error || "Failed to fetch");
         }
         const readings = await res.json();
-        setData(readings);
-        setLastUpdate(new Date());
-        setError(null);
+
+        //Logic: For when no new data is detected, i.e. there is no new reading 'id'
+        if (readings[0]?.id === lastReadingId.current) {
+          noChangeCount.current += 1;
+          if (noChangeCount.current >= 5) {
+            setIsPaused(true);
+            return;
+          }
+        } else {
+          noChangeCount.current = 0;
+          lastReadingId.current = readings[0]?.id;
+          setData(readings);
+          setLastUpdate(new Date());
+        }
       } catch (err) {
         console.error("Fetch error:", err);
         setError(err instanceof Error ? err.message : "Failed to fetch data");
       }
     };
 
-    fetchData();
-    const interval = setInterval(fetchData, 1000);
-    return () => clearInterval(interval);
-  }, []);
+    if (!isPaused) {
+      fetchData();
+      const interval = setInterval(fetchData, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [isPaused]);
 
   useEffect(() => {
     if (!chartRef.current || !data.length) return;
@@ -135,9 +151,18 @@ export default function Dashboard() {
   return (
     <div className="bg-gray-200 text-black min-h-screen p-4 sm:p-8">
       <main className="max-w-7xl mx-auto space-y-4">
-        <h1 className="flex flex-col text-3xl sm:text-4xl font-bold -mt-2">
+        <h1 className="text-3xl sm:text-4xl font-bold -mt-2">
           Sensor Readings
-          <span className="text-sm font-light">Last updated: {lastUpdateTime}</span>
+          <span className="text-black/40 font-light text-sm">
+            <div>Last updated: {lastUpdateTime}</div>
+            <div>
+              {isPaused ? (
+                "No new readings detected."
+              ) : (
+                <span className="animate-pulse">Collecting data...</span>
+              )}
+            </div>
+          </span>
         </h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 my-12">
@@ -170,6 +195,20 @@ export default function Dashboard() {
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
             Error: {error}
+          </div>
+        )}
+
+        {isPaused && (
+          <div className="flex justify-center mt-4">
+            <button
+              onClick={() => {
+                setIsPaused(false);
+                noChangeCount.current = 0;
+              }}
+              className="bg-black text-white px-4 py-2 rounded hover:bg-black/60 transition-colors"
+            >
+              Reconnect
+            </button>
           </div>
         )}
       </main>

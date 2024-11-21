@@ -7,7 +7,7 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState<"home" | "data">("home");
 
   return (
-    <div className="bg-gray-200 text-black min-h-screen">
+    <div className="w-full bg-gray-200 text-black min-h-screen">
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="relative rounded-full mb-8">
           <button
