@@ -19,7 +19,7 @@ export default function Home() {
         onClick={handleHomeClick}
         className="cursor-pointer fixed top-2 left-2"
       >
-        <Image src="./static/logo.svg" width={40} height={40} alt="logo" />
+        <Image src="./static/logo.svg" width={30} height={30} alt="logo" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 py-8">

@@ -44,6 +44,7 @@ const About = () => {
       </div>
       {/* Section 2: Features */}
       <div className="py-12 px-8 bg-gray-100">
+        <div className="w-full md:border-[0.5px] border-black bg-fermomap-1 bg-contain md:bg-cover bg-left bg-no-repeat h-[200px] md:h-[300px] mb-8" />
         <h3 className="text-3xl font-black">Proby?</h3>
         <p className="text-md font-light text-black/40 mb-4">
           Monitoring and controlling probiotic cultures of bacteria and yeast
@@ -75,7 +76,7 @@ const About = () => {
       {/* Section 4: Market Differentiation */}
       <div className="py-12 px-8 bg-white flex flex-col md:flex-row items-start space-y-8 md:space-y-0 md:space-x-8 mb-8">
         {/* Images Column */}
-        <div className="flex flex-col space-y-4 md:w-1/3">
+        <div className="flex flex-col space-y-4">
           {/* <div className="w-full">
             <Image
               src="/static/imgs/proby.png"
@@ -106,7 +107,7 @@ const About = () => {
         </div>
 
         {/* Text Section */}
-        <div className="my-12 px-8">
+        <div className="md:w-3/5 my-12 px-8">
           <h3 className="text-3xl font-black mb-4">What Sets Proby Apart?</h3>
           <p className="text-black/70">
             The market has three main categories of competitors, but Proby
@@ -134,49 +135,41 @@ const About = () => {
       </div>
 
       {/* Section 3: Team */}
-      <div className="md:w-2/3">
+      <div className="w-full">
         {/* Image */}
-        <div className="w-full mb-6">
-          <Image
-            src="/static/imgs/teamPhoto.png"
-            alt="Team working together"
-            width={800}
-            height={400}
-            className="rounded-md object-cover mx-auto"
-          />
-        </div>
+        <div className="w-full md:border-[0.5px] bg-center border-black bg-team bg-contain md:bg-cover bg-no-repeat h-[200px] md:h-[400px] mb-8" />
 
         {/* Content */}
-        <h3 className="text-3xl font-black mb-4">Meet the Team</h3>
-        <p className="text-black/70 mb-4">
-          Proby is powered by a multidisciplinary team with expertise in:
-        </p>
-        <ul className="list-disc list-inside space-y-2">
-          <li>Agricultural and food research for optimized fermentation.</li>
-          <li>
-            Industrial design to create a user-friendly device and interface.
-          </li>
-          <li>
-            Chemical engineering to ensure precision in data measurement and
-            device performance.
-          </li>
-          <li>
-            Software development for app creation and real-time data analysis.
-          </li>
-        </ul>
-        <p className="text-black/70 mt-4">
-          Our diverse backgrounds, spanning Nigeria, France, China, and Korea,
-          bring a unique perspective on food culture and health-conscious
-          innovation. Together, we are redefining the future of fermentation.
-        </p>
+        <div className="md:w-2/3 px-4">
+          <h3 className="text-3xl font-black mb-4">Meet the Team</h3>
+          <p className="text-black/70 mb-4">
+            Proby is powered by a multidisciplinary team with expertise in:
+          </p>
+          <ul className="list-disc list-inside space-y-2">
+            <li>Agricultural and food research for optimized fermentation.</li>
+            <li>
+              Industrial design to create a user-friendly device and interface.
+            </li>
+            <li>
+              Chemical engineering to ensure precision in data measurement and
+              device performance.
+            </li>
+            <li>
+              Software development for app creation and real-time data analysis.
+            </li>
+          </ul>
+          <p className="text-black/70 mt-4">
+            Our diverse backgrounds, spanning Nigeria, France, China, and Korea,
+            bring a unique perspective on food culture and health-conscious
+            innovation. Together, we are redefining the future of fermentation.
+          </p>
+        </div>
       </div>
 
       {/* Section 5: Call to Action */}
       <div className="py-12 px-8 flex justify-center items-center">
         <div className="w-full max-w-lg text-center">
-          <h3 className="text-3xl font-black mb-4">
-            Stay updated
-          </h3>
+          <h3 className="text-3xl font-black mb-4">Stay updated</h3>
           <p className="text-black/70 mb-6">
             Join us in revolutionizing fermentation and gut health. Be the first
             to experience Proby and stay updated with the latest news.
