@@ -1,13 +1,27 @@
 "use client";
 import { useState } from "react";
 import Dashboard from "./components/Dashboard";
-import Alerts from "./components/Alerts";
+import About from "./components/Alerts";
+import Image from "next/image";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<"home" | "data">("home");
 
+  const handleHomeClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setActiveTab("home");
+  };
+
   return (
-    <div className="w-full bg-gray-200 text-black min-h-screen">
+    <div className="w-full bg-white text-black min-h-screen">
+      {/* Logo */}
+      <div
+        onClick={handleHomeClick}
+        className="cursor-pointer fixed top-2 left-2"
+      >
+        <Image src="./static/logo.svg" width={40} height={40} alt="logo" />
+      </div>
+
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="relative rounded-full mb-8">
           <button
@@ -18,7 +32,7 @@ export default function Home() {
                 : "text-black/30 hover:text-black"
             }`}
           >
-            Alerts
+            About
           </button>
           <button
             onClick={() => setActiveTab("data")}
@@ -32,7 +46,7 @@ export default function Home() {
           </button>
         </div>
 
-        {activeTab === "home" ? <Alerts /> : <Dashboard />}
+        {activeTab === "home" ? <About /> : <Dashboard />}
       </div>
     </div>
   );

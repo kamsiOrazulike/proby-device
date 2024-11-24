@@ -11,6 +11,7 @@ import {
   Legend,
   LineController,
 } from "chart.js";
+import { ImConnection } from "react-icons/im";
 import type { SensorReading } from "../types";
 import { ReadingCard } from "./ReadingCards";
 
@@ -157,7 +158,7 @@ export default function Dashboard() {
             <div>Last updated: {lastUpdateTime}</div>
             <div>
               {isPaused ? (
-                "No new readings detected."
+                "Connection lost." //No new readings detected
               ) : (
                 <span className="animate-pulse">Collecting data...</span>
               )}
@@ -168,7 +169,7 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 my-12">
           <ReadingCard
             title="Microbial Activity"
-            subtitle="The presence of microbes picked up by the sensor"
+            subtitle="The presence of LIVE microbes"
             value={latestReadings.microbial}
             unit="Cfu"
           />
@@ -199,15 +200,17 @@ export default function Dashboard() {
         )}
 
         {isPaused && (
-          <div className="flex justify-center mt-4">
+          <div className="fixed bottom-4 right-8">
             <button
               onClick={() => {
                 setIsPaused(false);
                 noChangeCount.current = 0;
               }}
-              className="bg-black text-white px-4 py-2 rounded hover:bg-black/60 transition-colors"
+              className="bg-black text-white px-4 py-2 rounded-full hover:bg-black/60 transition-colors"
             >
-              Reconnect
+              <span className="flex flex-row items-center">
+                <ImConnection className="mr-2" /> Reconnect
+              </span>
             </button>
           </div>
         )}
