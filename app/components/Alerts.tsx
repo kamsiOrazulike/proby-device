@@ -45,7 +45,7 @@ const About = () => {
       {/* Section 2: Features */}
       <div className="py-12 px-8 bg-gray-100">
         <div className="w-full md:border-[0.5px] border-black bg-fermomap-1 bg-contain md:bg-cover bg-left bg-no-repeat h-[200px] md:h-[300px] mb-8" />
-        <h3 className="text-3xl font-black">Proby?</h3>
+        <h3 className="text-3xl font-black">PROBY</h3>
         <p className="text-md font-light text-black/40 mb-4">
           Monitoring and controlling probiotic cultures of bacteria and yeast
         </p>
