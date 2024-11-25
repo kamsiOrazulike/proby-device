@@ -1,4 +1,5 @@
 import Image from "next/image";
+import ContactForm from "./Form";
 
 const About = () => {
   return (
@@ -74,27 +75,8 @@ const About = () => {
       </div>
 
       {/* Section 4: Market Differentiation */}
-      <div className="py-12 px-8 bg-white flex flex-col md:flex-row items-start space-y-8 md:space-y-0 md:space-x-8 mb-8">
-        {/* Images Column */}
+      <div className="py-12 px-8 bg-white flex flex-col md:flex-row items-start align-baseline space-y-8 md:space-y-0 md:space-x-8 mb-8">
         <div className="flex flex-col space-y-4">
-          {/* <div className="w-full">
-            <Image
-              src="/static/imgs/proby.png"
-              alt="Device schematics"
-              width={300}
-              height={300}
-              className="rounded-lg mx-auto md:mx-0"
-            />
-          </div>
-          <div className="w-full">
-            <Image
-              src="/static/imgs/proby1.png"
-              alt="Device schematics"
-              width={300}
-              height={300}
-              className="rounded-lg mx-auto md:mx-0"
-            />
-          </div> */}
           <div className="w-full">
             <Image
               src="/static/imgs/schematics.png"
@@ -167,18 +149,7 @@ const About = () => {
       </div>
 
       {/* Section 5: Call to Action */}
-      <div className="py-12 px-8 flex justify-center items-center">
-        <div className="w-full max-w-lg text-center">
-          <h3 className="text-3xl font-black mb-4">Stay updated</h3>
-          <p className="text-black/70 mb-6">
-            Join us in revolutionizing fermentation and gut health. Be the first
-            to experience Proby and stay updated with the latest news.
-          </p>
-          <button className="px-6 py-3 bg-black text-white rounded-md text-lg font-medium hover:bg-gray-800 transition-all">
-            Sign Up for Updates
-          </button>
-        </div>
-      </div>
+      <ContactForm />
     </div>
   );
 };

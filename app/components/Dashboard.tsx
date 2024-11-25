@@ -150,7 +150,7 @@ export default function Dashboard() {
   const lastUpdateTime = lastUpdate?.toLocaleString() ?? "No data";
 
   return (
-    <div className="bg-gray-200 text-black min-h-screen p-4 sm:p-8">
+    <div className="bg-white text-black min-h-screen p-4 sm:p-8">
       <main className="max-w-7xl mx-auto space-y-4">
         <h1 className="text-3xl sm:text-4xl font-bold -mt-2">
           Sensor Readings
