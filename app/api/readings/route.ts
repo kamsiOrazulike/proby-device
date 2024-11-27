@@ -34,7 +34,7 @@ export async function POST(request: Request) {
       microbial_activity: Number(body.microbial_activity),
       temperature: Number(body.temperature),
       humidity: Number(body.humidity),
-      cloudIndex: Number(body.cloudIndex)
+      cloud_index: Number(body.cloud_index)
     };
 
     // Add validation

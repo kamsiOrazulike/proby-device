@@ -110,7 +110,7 @@ export default function Dashboard() {
           },
           {
             label: "Cloud Index",
-            data: data.map((d) => d.cloudIndex),
+            data: data.map((d) => d.cloud_index),
             backgroundColor: "#9333EA",
             borderColor: "#9333EA",
             tension: 0.1,
@@ -152,7 +152,7 @@ export default function Dashboard() {
     microbial: data[0]?.microbial_activity ?? "-",
     temperature: data[0]?.temperature ? data[0].temperature.toFixed(1) : "-",
     humidity: data[0]?.humidity ? data[0].humidity.toFixed(1) : "-",
-    cloudIndex: data[0]?.cloudIndex ?? "-",
+    cloud_index: data[0]?.cloud_index ?? "-",
   };
 
   const lastUpdateTime = lastUpdate?.toLocaleString() ?? "No data";
@@ -196,7 +196,7 @@ export default function Dashboard() {
           <ReadingCard
             title="Cloud Index"
             subtitle="Current cloudiness index"
-            value={latestReadings.cloudIndex}
+            value={latestReadings.cloud_index}
             unit=""
           />
         </div>

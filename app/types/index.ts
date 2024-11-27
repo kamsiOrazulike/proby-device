@@ -3,7 +3,7 @@ export interface SensorReading {
   microbial_activity: number;
   temperature: number;
   humidity: number;
-  cloudIndex: number;
+  cloud_index: number;
   created_at: string;
 }
 
