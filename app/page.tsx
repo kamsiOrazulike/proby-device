@@ -17,32 +17,32 @@ export default function Home() {
       {/* Logo */}
       <div
         onClick={handleHomeClick}
-        className="cursor-pointer fixed top-2 left-2"
+        className="cursor-pointer fixed top-[1rem] left-[1rem]"
       >
         <Image src="./static/logo.svg" width={30} height={30} alt="logo" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="relative rounded-full mb-8">
+      <div className="max-w-7xl mx-auto px-4 py-12">
+        <div className="w-full flex flex-row justify-center relative mb-12">
           <button
             onClick={() => setActiveTab("home")}
             className={`mr-1 px-4 py-2 rounded-full transition-colors duration-150 ${
               activeTab === "home"
                 ? "text-black"
-                : "text-black/30 hover:text-black"
+                : "text-black/20 hover:text-black"
             }`}
           >
-            About
+            About Us
           </button>
           <button
             onClick={() => setActiveTab("data")}
             className={`px-4 py-2 rounded-full transition-colors duration-150 ${
               activeTab === "data"
                 ? "text-black"
-                : "text-black/30 hover:text-black"
+                : "text-black/20 hover:text-black"
             }`}
           >
-            Dashboard
+            Dashboard (Demo)
           </button>
         </div>
 

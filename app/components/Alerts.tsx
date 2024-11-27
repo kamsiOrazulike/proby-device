@@ -1,27 +1,29 @@
 import Image from "next/image";
 import ContactForm from "./Form";
+import TeamSection from "./Team";
 
 const About = () => {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col w-full">
       {/* Header */}
       {/* Hero Image */}
-      <div className="w-full bg-schematic-1 bg-contain bg-left bg-no-repeat h-[400px]" />
+      <div className="w-full -mt-4 mb-8 bg-hero-1 bg-cover bg-center lg:bg-bottom bg-no-repeat h-[400px] lg:h-[500px]" />
+
       {/* Section 1 */}
-      <div className="flex flex-col md:flex-row items-start md:space-x-12 px-8 mb-8">
+      <div className="flex flex-col md:flex-row items-start md:space-x-12 px-8 mb-8 border-b border-black/20 pb-8">
         {/* Left Column */}
         <div className="md:w-1/2 space-y-4">
-          <h2 className="text-4xl font-bold">PROBY</h2>
+          <h2 className="text-4xl font-bold -mb-2">PROBY</h2>
+          <p className="text-gray-500 text-sm">by NutriTech</p>
           <p className="text-black/70">
             Transforming the way we ferment food at home and professionally.
           </p>
-          <p className="text-gray-500 text-sm">by NutriTech</p>
         </div>
 
         {/* Right Column */}
         <div className="md:w-1/2 space-y-8">
           <div>
-            <h3 className="text-xl font-bold mb-2">The Problem</h3>
+            <h3 className="text-2xl font-thin mb-2">The Problem</h3>
             <p className="text-black/70">
               Dysbiosis, a gut bacterial imbalance, can lead to digestive
               issues, inflammation, hormonal imbalance, and weakened immunity.
@@ -31,7 +33,7 @@ const About = () => {
             </p>
           </div>
           <div>
-            <h3 className="text-xl font-bold mb-2">The Solution</h3>
+            <h3 className="text-2xl font-thin mb-2">The Solution</h3>
             <p className="text-black/70">
               Proby is a smart fermentation sensor that monitors microbial
               activity, distinguishes between good and bad microbes, and
@@ -43,10 +45,11 @@ const About = () => {
           </div>
         </div>
       </div>
+
       {/* Section 2: Features */}
-      <div className="py-12 px-8 bg-gray-100">
+      <div className="py-12 px-8 border-b border-black/20 pb-8">
         <div className="w-full md:border-[0.5px] border-black bg-fermomap-1 bg-contain md:bg-cover bg-left bg-no-repeat h-[200px] md:h-[300px] mb-8" />
-        <h3 className="text-3xl font-black">PROBY</h3>
+        <h3 className="text-4xl font-thin">User Map</h3>
         <p className="text-md font-light text-black/40 mb-4">
           Monitoring and controlling probiotic cultures of bacteria and yeast
         </p>
@@ -54,7 +57,7 @@ const About = () => {
           <p className="text-black/70">
             Proby doesn’t just monitor fermentation, it educates and empowers.
             By providing precise measurements of microbial activity, airflow,
-            temperature, pH, and humidity, Proby ensures safety and quality in
+            temperature, pH, and humidity, we ensures safety and quality in
             every batch of fermented food or drink.
           </p>
           <ul className="list-disc list-inside space-y-2">
@@ -75,7 +78,7 @@ const About = () => {
       </div>
 
       {/* Section 4: Market Differentiation */}
-      <div className="py-12 px-8 bg-white flex flex-col md:flex-row items-start align-baseline space-y-8 md:space-y-0 md:space-x-8 mb-8">
+      <div className="py-12 px-8 flex flex-col md:flex-row items-start align-baseline space-y-8 md:space-y-0 md:space-x-8 border-b border-black/20 pb-8">
         <div className="flex flex-col space-y-4">
           <div className="w-full">
             <Image
@@ -90,7 +93,7 @@ const About = () => {
 
         {/* Text Section */}
         <div className="md:w-3/5 my-12 px-8">
-          <h3 className="text-3xl font-black mb-4">What Sets Proby Apart?</h3>
+          <h3 className="text-4xl font-thin mb-4">What Sets Proby Apart?</h3>
           <p className="text-black/70">
             The market has three main categories of competitors, but Proby
             stands out:
@@ -117,36 +120,7 @@ const About = () => {
       </div>
 
       {/* Section 3: Team */}
-      <div className="w-full">
-        {/* Image */}
-        <div className="w-full md:border-[0.5px] bg-center border-black bg-team bg-contain md:bg-cover bg-no-repeat h-[200px] md:h-[400px] mb-8" />
-
-        {/* Content */}
-        <div className="md:w-2/3 px-4">
-          <h3 className="text-3xl font-black mb-4">Meet the Team</h3>
-          <p className="text-black/70 mb-4">
-            Proby is powered by a multidisciplinary team with expertise in:
-          </p>
-          <ul className="list-disc list-inside space-y-2">
-            <li>Agricultural and food research for optimized fermentation.</li>
-            <li>
-              Industrial design to create a user-friendly device and interface.
-            </li>
-            <li>
-              Chemical engineering to ensure precision in data measurement and
-              device performance.
-            </li>
-            <li>
-              Software development for app creation and real-time data analysis.
-            </li>
-          </ul>
-          <p className="text-black/70 mt-4">
-            Our diverse backgrounds, spanning Nigeria, France, China, and Korea,
-            bring a unique perspective on food culture and health-conscious
-            innovation. Together, we are redefining the future of fermentation.
-          </p>
-        </div>
-      </div>
+      <TeamSection />
 
       {/* Section 5: Call to Action */}
       <ContactForm />
