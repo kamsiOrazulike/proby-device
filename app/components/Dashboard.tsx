@@ -108,6 +108,13 @@ export default function Dashboard() {
             borderColor: "#2563EB",
             tension: 0.1,
           },
+          {
+            label: "Cloud Index",
+            data: data.map((d) => d.cloudIndex),
+            backgroundColor: "#9333EA",
+            borderColor: "#9333EA",
+            tension: 0.1,
+          },
         ],
       },
       options: {
@@ -145,6 +152,7 @@ export default function Dashboard() {
     microbial: data[0]?.microbial_activity ?? "-",
     temperature: data[0]?.temperature ? data[0].temperature.toFixed(1) : "-",
     humidity: data[0]?.humidity ? data[0].humidity.toFixed(1) : "-",
+    cloudIndex: data[0]?.cloudIndex ?? "-",
   };
 
   const lastUpdateTime = lastUpdate?.toLocaleString() ?? "No data";
@@ -184,6 +192,12 @@ export default function Dashboard() {
             subtitle="Relative humidity in the environment"
             value={latestReadings.humidity}
             unit="%"
+          />
+          <ReadingCard
+            title="Cloud Index"
+            subtitle="Current cloudiness index"
+            value={latestReadings.cloudIndex}
+            unit=""
           />
         </div>
 

@@ -3,6 +3,7 @@ export interface SensorReading {
   microbial_activity: number;
   temperature: number;
   humidity: number;
+  cloudIndex: number;
   created_at: string;
 }
 
@@ -17,9 +18,8 @@ export interface TeamMemberProps {
   name: string;
   title: string;
   description: string;
-  hobbies: string;
+  hobbies?: string;
   email: string;
   linkedin?: string;
-  instagram?: string;
   imageUrl?: string;
 }

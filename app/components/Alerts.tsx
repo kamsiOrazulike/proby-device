@@ -7,7 +7,7 @@ const About = () => {
     <div className="min-h-screen flex flex-col w-full">
       {/* Header */}
       {/* Hero Image */}
-      <div className="w-full -mt-4 mb-8 bg-hero-1 bg-cover bg-center lg:bg-bottom bg-no-repeat h-[400px] lg:h-[500px]" />
+      <div className="w-full -mt-4 mb-8 bg-hero-1 bg-cover bg-center lg:bg-[center_top_10px] bg-no-repeat h-[400px] lg:h-[500px]" />
 
       {/* Section 1 */}
       <div className="flex flex-col md:flex-row items-start md:space-x-12 px-8 mb-8 border-b border-black/20 pb-8">
