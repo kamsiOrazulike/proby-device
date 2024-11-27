@@ -108,13 +108,6 @@ export default function Dashboard() {
             borderColor: "#2563EB",
             tension: 0.1,
           },
-          {
-            label: "Cloud Index",
-            data: data.map((d) => d.cloud_index),
-            backgroundColor: "#9333EA",
-            borderColor: "#9333EA",
-            tension: 0.1,
-          },
         ],
       },
       options: {
