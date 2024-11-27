@@ -1,34 +1,25 @@
 import React from "react";
 import { TeamMemberProps } from "../types";
-import { AiFillLinkedin, AiFillInstagram } from "react-icons/ai";
+import { AiFillLinkedin } from "react-icons/ai";
 
 const TeamMember: React.FC<TeamMemberProps> = ({
   name,
   title,
   description,
-  hobbies,
   email,
   linkedin,
-  instagram,
 }) => (
   <div className="flex flex-col bg-gray-100 rounded-sm">
     <div className="flex-1 p-6 hover:cursor-default">
       <h4 className="text-sm uppercase font-light text-black/40">{title}</h4>
       <h3 className="text-2xl font-normal text-gray-900">{name}</h3>
       <p className="text-gray-700">{description}</p>
-      <p className="text-gray-600 italic">{hobbies}</p>
-
       <div className="flex items-center justify-between mt-4">
         <span className="text-gray-600">{email}</span>
         <div className="flex gap-4">
           {linkedin && (
             <a href={linkedin} className="text-gray-600 hover:text-gray-900">
               <AiFillLinkedin size={20} />
-            </a>
-          )}
-          {instagram && (
-            <a href={instagram} className="text-gray-600 hover:text-gray-900">
-              <AiFillInstagram size={20} />
             </a>
           )}
         </div>
@@ -42,40 +33,30 @@ const TeamSection = () => {
     {
       name: "Rosalie Valentiny",
       title: "Founder",
-      description:
-        "5+ years experience in product design, from medical devices to furniture.",
-      hobbies: "A cyclist with a keen eye for simple and powerful design.",
+      description: "2+ years experience in Data Science.",
       email: "rosalie.valentiny23@imperial.ac.uk",
-      linkedin: "#",
-      instagram: "#",
+      linkedin: "https://www.linkedin.com/in/rosalie-valentiny/",
     },
     {
       name: "Xinyu Cao",
       title: "Founder",
-      description: "3+ years experience creating dynamic installations.",
-      hobbies:
-        "Sailing captain with a passion project developing artificial reefs.",
+      description: "2+ years experience in Materials Design and Chemistry",
       email: "xinyu.cao23@imperial.ac.uk",
-      linkedin: "#",
+      linkedin: "https://www.linkedin.com/in/xinyu-cao-937ba728b/",
     },
     {
       name: "Jinhak Lee",
       title: "Head of Product",
-      description:
-        "5+ years experience in product design, from medical devices to furniture.",
-      hobbies: "A cyclist with a keen eye for simple and powerful design.",
+      description: "10+ years experience in Industrial Design",
       email: "jinhak.lee23@imperial.ac.uk",
-      linkedin: "#",
-      instagram: "#",
+      linkedin: "https://www.linkedin.com/in/jinhak/",
     },
     {
       name: "Kamsi Orazulike",
       title: "Head of Technology",
-      description: "10+ years experience in business and brand strategy.",
-      hobbies: "An avid climber with an obsession with bio-materials.",
+      description: "3+ years experience as a Web & Applications Developer",
       email: "kamsiyonna.orazulike23@imperial.ac.uk",
-      linkedin: "#",
-      instagram: "#",
+      linkedin: "https://www.linkedin.com/in/kamsiyonnaorazulike",
     },
   ];
 
