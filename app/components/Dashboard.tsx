@@ -13,7 +13,7 @@ import {
 } from "chart.js";
 import { ImConnection } from "react-icons/im";
 import type { SensorReading } from "../types";
-import { ReadingCard } from "./ReadingCards";
+import { ReadingCardProps } from "../types";
 
 Chart.register(
   CategoryScale,
@@ -25,6 +25,40 @@ Chart.register(
   Legend,
   LineController
 );
+
+const ReadingCard = ({
+  title,
+  subtitle,
+  value,
+  unit,
+  isLarge = false,
+}: ReadingCardProps) => {
+  const isMicrobialCard = title === "Microbial Activity";
+  const bgColor = isMicrobialCard
+    ? Number(value) < 30
+      ? "bg-red-100"
+      : "bg-green-100"
+    : "bg-transparent";
+
+  return (
+    <div
+      className={`border border-gray-100 ${bgColor} p-6 shadow-sm ${
+        isLarge ? "h-auto" : ""
+      }`}
+    >
+      <h3 className={`font-bold ${isLarge ? "text-3xl" : "text-md"}`}>
+        {title}
+      </h3>
+      <p className="text-black/50 text-sm font-thin mb-2">{subtitle}</p>
+      <div className="flex items-baseline gap-2">
+        <div className={`font-bold ${isLarge ? "text-5xl" : "text-2xl"}`}>
+          {value}
+        </div>
+        <div className="text-sm opacity-75">{unit}</div>
+      </div>
+    </div>
+  );
+};
 
 export default function Dashboard() {
   const [data, setData] = useState<SensorReading[]>([]);
@@ -46,7 +80,6 @@ export default function Dashboard() {
         }
         const readings = await res.json();
 
-        //Logic: For when no new data is detected, i.e. there is no new reading 'id'
         if (readings[0]?.id === lastReadingId.current) {
           noChangeCount.current += 1;
           if (noChangeCount.current >= 5) {
@@ -159,7 +192,7 @@ export default function Dashboard() {
             <div>Last updated: {lastUpdateTime}</div>
             <div>
               {isPaused ? (
-                "Connection lost." //No new readings detected
+                "Connection lost."
               ) : (
                 <span className="animate-pulse">Collecting data...</span>
               )}
@@ -167,31 +200,37 @@ export default function Dashboard() {
           </span>
         </h1>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 my-12">
-          <ReadingCard
-            title="Microbial Activity"
-            subtitle="The presence of LIVE microbes"
-            value={latestReadings.microbial}
-            unit="Cfu"
-          />
-          <ReadingCard
-            title="Temperature"
-            subtitle="Current environmental temperature"
-            value={latestReadings.temperature}
-            unit="°C"
-          />
-          <ReadingCard
-            title="Humidity"
-            subtitle="Relative humidity in the environment"
-            value={latestReadings.humidity}
-            unit="%"
-          />
-          <ReadingCard
-            title="Cloud Index"
-            subtitle="Current cloudiness index"
-            value={latestReadings.cloud_index}
-            unit=""
-          />
+        <div className="flex flex-col gap-4 my-12">
+          <div className="w-full">
+            <ReadingCard
+              title="Microbial Activity"
+              subtitle="The presence of LIVE microbes"
+              value={latestReadings.microbial}
+              unit="Cfu"
+              isLarge={true}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <ReadingCard
+              title="Temperature"
+              subtitle="Current environmental temperature"
+              value={latestReadings.temperature}
+              unit="°C"
+            />
+            <ReadingCard
+              title="Humidity"
+              subtitle="Relative humidity in the environment"
+              value={latestReadings.humidity}
+              unit="%"
+            />
+            <ReadingCard
+              title="Cloud Index"
+              subtitle="Current cloudiness index"
+              value={latestReadings.cloud_index}
+              unit=""
+            />
+          </div>
         </div>
 
         <div className="overflow-x-auto">

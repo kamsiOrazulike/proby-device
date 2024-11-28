@@ -9,10 +9,11 @@ export interface SensorReading {
 
 export interface ReadingCardProps {
   title: string;
-  subtitle?: string;
+  subtitle: string;
   value: string | number;
   unit: string;
-}
+  isLarge?: boolean;
+};
 
 export interface TeamMemberProps {
   name: string;
