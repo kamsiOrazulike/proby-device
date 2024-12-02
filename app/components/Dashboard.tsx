@@ -1,141 +1,9 @@
 import { useEffect, useState, useRef } from "react";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  LineController,
-  ChartData,
-  ChartOptions,
-} from "chart.js";
-import { AiOutlineLineChart, AiOutlineWifi } from "react-icons/ai";
-import { ReadingCardProps, SensorReading, ChartProps } from "../types";
+import { AiOutlineWifi } from "react-icons/ai";
+import { SensorReading } from "../types";
 import Modal from "./Modal";
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  LineController
-);
-
-const ReadingChart = ({ data, label, dataKey, color }: ChartProps) => {
-  const chartRef = useRef<HTMLCanvasElement>(null);
-  const chartInstance = useRef<ChartJS | null>(null);
-
-  useEffect(() => {
-    if (!chartRef.current || !data.length) return;
-
-    if (chartInstance.current) {
-      chartInstance.current.destroy();
-    }
-
-    const ctx = chartRef.current.getContext("2d");
-    if (!ctx) return;
-
-    const chartData: ChartData<"line"> = {
-      labels: data.map((d) => new Date(d.created_at).toLocaleTimeString()),
-      datasets: [
-        {
-          label,
-          data: data.map((d) => Number(d[dataKey])),
-          backgroundColor: color,
-          borderColor: color,
-          tension: 0.1,
-        },
-      ],
-    };
-
-    const options: ChartOptions<"line"> = {
-      responsive: true,
-      maintainAspectRatio: false,
-      animation: { duration: 0 },
-      scales: {
-        y: {
-          beginAtZero: false,
-          title: { display: true, text: "Value" },
-        },
-        x: {
-          title: { display: true, text: "Time" },
-        },
-      },
-    };
-
-    chartInstance.current = new ChartJS(ctx, {
-      type: "line",
-      data: chartData,
-      options: options,
-    });
-
-    return () => {
-      if (chartInstance.current) {
-        chartInstance.current.destroy();
-      }
-    };
-  }, [data, label, dataKey, color]);
-
-  return (
-    <div className="min-w-[600px] h-[300px] sm:h-[400px]">
-      <canvas ref={chartRef} />
-    </div>
-  );
-};
-
-const ReadingCard = ({
-  title,
-  subtitle,
-  value,
-  unit,
-  isLarge = false,
-  onViewChart,
-}: ReadingCardProps & { onViewChart?: () => void }) => {
-  const isMicrobialCard = title === "Microbial Activity";
-  const bgColor = isMicrobialCard
-    ? Number(value) < 30
-      ? "bg-red-800"
-      : "bg-transparent"
-    : "bg-transparent";
-
-  return (
-    <div
-      className={`border border-[#FF7737] ${bgColor} p-6 shadow-sm ${
-        isLarge ? "h-auto" : ""
-      }`}
-    >
-      <div className="flex justify-between items-start">
-        <div>
-          <h3 className={`font-bold ${isLarge ? "text-3xl" : "text-md"}`}>
-            {title}
-          </h3>
-          <p className="text-white/50 text-sm font-thin mb-2">{subtitle}</p>
-          <div className="flex items-baseline gap-2">
-            <div className={`font-bold ${isLarge ? "text-5xl" : "text-2xl"}`}>
-              {value}
-            </div>
-            <div className="text-sm opacity-75">{unit}</div>
-          </div>
-        </div>
-        {onViewChart && (
-          <button
-            onClick={onViewChart}
-            className="text-[#FF7737] hover:text-[#FF9966] transition-colors p-2"
-            title={`View ${title} Chart`}
-          >
-            <AiOutlineLineChart className="w-5 h-5" />
-          </button>
-        )}
-      </div>
-    </div>
-  );
-};
+import ReadingCard from "./ReadingCard";
+import ReadingChart from "./ReadingChart";
 
 export default function Dashboard() {
   const [data, setData] = useState<SensorReading[]>([]);
@@ -225,7 +93,7 @@ export default function Dashboard() {
                   isOpen: true,
                   title: "Microbial Activity",
                   dataKey: "microbial_activity",
-                  color: "#066E19",
+                  color: "#FF7737",
                 })
               }
             />
@@ -242,7 +110,7 @@ export default function Dashboard() {
                   isOpen: true,
                   title: "Temperature",
                   dataKey: "temperature",
-                  color: "#DC2626",
+                  color: "#FF7737",
                 })
               }
             />
@@ -256,7 +124,7 @@ export default function Dashboard() {
                   isOpen: true,
                   title: "Humidity",
                   dataKey: "humidity",
-                  color: "#2563EB",
+                  color: "#FF7737",
                 })
               }
             />
@@ -270,7 +138,7 @@ export default function Dashboard() {
                   isOpen: true,
                   title: "Cloud Index",
                   dataKey: "cloud_index",
-                  color: "#9CA3AF",
+                  color: "#FF7737",
                 })
               }
             />
@@ -291,7 +159,6 @@ export default function Dashboard() {
                   data={data}
                   label={activeChart.title}
                   dataKey={activeChart.dataKey}
-                  color={activeChart.color}
                 />
               )}
             </div>
@@ -311,7 +178,7 @@ export default function Dashboard() {
                 setIsPaused(false);
                 noChangeCount.current = 0;
               }}
-              className="bg-black text-white px-4 py-2 rounded-full hover:bg-black/60 transition-colors"
+              className="bg-[#FF7737]/60 text-white px-4 py-2 rounded-full hover:bg-[#FF7737] transition-colors"
             >
               <span className="flex flex-row items-center">
                 <AiOutlineWifi className="mr-2" /> Reconnect

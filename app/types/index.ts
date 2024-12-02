@@ -1,18 +1,11 @@
 export interface SensorReading {
   id: number;
+  created_at: string;
   microbial_activity: number;
   temperature: number;
   humidity: number;
   cloud_index: number;
-  created_at: string;
 }
-
-export type ChartProps = {
-  data: SensorReading[];
-  label: string;
-  dataKey: keyof SensorReading;
-  color: string;
-};
 
 export interface ReadingCardProps {
   title: string;
@@ -20,7 +13,14 @@ export interface ReadingCardProps {
   value: string | number;
   unit: string;
   isLarge?: boolean;
-};
+  onViewChart?: () => void;
+}
+
+export interface ChartProps {
+  data: SensorReading[];
+  label: string;
+  dataKey: keyof SensorReading;
+}
 
 export interface TeamMemberProps {
   name: string;
