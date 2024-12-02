@@ -57,7 +57,7 @@ const TeamSection = () => {
     {
       name: "Kamsi Orazulike",
       title: "Head of Technology",
-      description: "3+ years experience as a Web & Applications Developer",
+      description: "3+ years experience in Fullstack Development (Javascript)",
       email: "kamsiyonna.orazulike23@imperial.ac.uk",
       linkedin: "https://www.linkedin.com/in/kamsiyonnaorazulike",
     },

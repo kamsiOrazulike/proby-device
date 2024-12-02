@@ -10,6 +10,7 @@ export default function Dashboard() {
   const [error, setError] = useState<string | null>(null);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
   const [isPaused, setIsPaused] = useState(false);
+  const [isConnected, setIsConnected] = useState(false);
   const [activeChart, setActiveChart] = useState<{
     isOpen: boolean;
     title: string;
@@ -18,6 +19,7 @@ export default function Dashboard() {
   } | null>(null);
   const lastReadingId = useRef<number | null>(null);
   const noChangeCount = useRef(0);
+  const uniqueIdsCount = useRef(new Set<number>());
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,17 +35,24 @@ export default function Dashboard() {
           noChangeCount.current += 1;
           if (noChangeCount.current >= 5) {
             setIsPaused(true);
+            setIsConnected(false);
             return;
           }
         } else {
           noChangeCount.current = 0;
           lastReadingId.current = readings[0]?.id;
+          // Track unique IDs
+          uniqueIdsCount.current.add(readings[0]?.id);
+          if (uniqueIdsCount.current.size >= 3) {
+            setIsConnected(true);
+          }
           setData(readings);
           setLastUpdate(new Date());
         }
       } catch (err) {
         console.error("Fetch error:", err);
         setError(err instanceof Error ? err.message : "Failed to fetch data");
+        setIsConnected(false);
       }
     };
 
@@ -63,19 +72,19 @@ export default function Dashboard() {
 
   const lastUpdateTime = lastUpdate?.toLocaleString() ?? "No data";
 
+  const getConnectionStatus = () => {
+    if (isPaused) return "Device not found.";
+    if (isConnected) return <span className="text-green-500">Connected</span>;
+    return <span className="animate-pulse">Searching...</span>;
+  };
+
   return (
     <div className="bg-[#36357F] text-white min-h-screen p-4 sm:p-8">
       <main className="max-w-7xl mx-auto space-y-4">
         <h1 className="text-3xl sm:text-4xl font-bold -mt-2">
           Sensor Readings
           <span className="text-[#FF7737] font-light text-sm">
-            <div>
-              {isPaused ? (
-                "Device not found."
-              ) : (
-                <span className="animate-pulse">Searching...</span>
-              )}
-            </div>
+            <div>{getConnectionStatus()}</div>
           </span>
         </h1>
 
@@ -179,11 +188,13 @@ export default function Dashboard() {
               onClick={() => {
                 setIsPaused(false);
                 noChangeCount.current = 0;
+                uniqueIdsCount.current.clear();
+                setIsConnected(false);
               }}
               className="bg-[#FF7737]/60 text-white px-4 py-2 rounded-full hover:bg-[#FF7737] transition-colors"
             >
               <span className="flex flex-row items-center">
-                <AiOutlineWifi className="mr-2" /> Search Devices
+                <AiOutlineWifi className="mr-2" /> Reconnect
               </span>
             </button>
           </div>
