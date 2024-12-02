@@ -68,13 +68,12 @@ export default function Dashboard() {
       <main className="max-w-7xl mx-auto space-y-4">
         <h1 className="text-3xl sm:text-4xl font-bold -mt-2">
           Sensor Readings
-          <span className="text-white/40 font-light text-sm">
-            <div>Last updated: {lastUpdateTime}</div>
+          <span className="text-[#FF7737] font-light text-sm">
             <div>
               {isPaused ? (
-                "Connection lost."
+                "Device not found."
               ) : (
-                <span className="animate-pulse">Collecting data...</span>
+                <span className="animate-pulse">Searching...</span>
               )}
             </div>
           </span>
@@ -162,6 +161,9 @@ export default function Dashboard() {
                 />
               )}
             </div>
+            <div className="text-center mt-16 font-light text-xs">
+              Last updated: {lastUpdateTime}
+            </div>
           </div>
         </Modal>
 
@@ -181,7 +183,7 @@ export default function Dashboard() {
               className="bg-[#FF7737]/60 text-white px-4 py-2 rounded-full hover:bg-[#FF7737] transition-colors"
             >
               <span className="flex flex-row items-center">
-                <AiOutlineWifi className="mr-2" /> Reconnect
+                <AiOutlineWifi className="mr-2" /> Search Devices
               </span>
             </button>
           </div>

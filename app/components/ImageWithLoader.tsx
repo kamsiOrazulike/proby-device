@@ -34,9 +34,9 @@ const ImageWithLoader = ({
     <div className="relative h-[400px] -mt-4 mb-8">
       {isLoading && (
         <div className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 absolute inset-0 z-10">
-          <div className="flex items-center justify-center w-full h-full bg-gray-300 rounded dark:bg-gray-700">
+          <div className="flex items-center justify-center w-full h-full bg-[#1a1a3e] rounded">
             <svg
-              className="w-10 h-10 text-gray-200 dark:text-gray-600"
+              className="w-10 h-10 text-[#36357F]"
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="currentColor"
@@ -53,7 +53,9 @@ const ImageWithLoader = ({
         width={width}
         height={height}
         fill={fill}
-        className={`${className} ${isLoading ? "opacity-0" : "opacity-100 object-contain narrow"}`}
+        className={`${className} ${
+          isLoading ? "opacity-0" : "opacity-100 object-contain narrow"
+        }`}
         priority
       />
     </div>
