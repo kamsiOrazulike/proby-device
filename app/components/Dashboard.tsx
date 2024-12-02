@@ -1,7 +1,6 @@
-"use client";
 import { useEffect, useState, useRef } from "react";
 import {
-  Chart,
+  Chart as ChartJS,
   CategoryScale,
   LinearScale,
   PointElement,
@@ -10,12 +9,15 @@ import {
   Tooltip,
   Legend,
   LineController,
+  ChartData,
+  ChartOptions,
 } from "chart.js";
 import { ImConnection } from "react-icons/im";
-import type { SensorReading } from "../types";
-import { ReadingCardProps } from "../types";
+import { LineChart } from "lucide-react";
+import { ReadingCardProps, SensorReading, ChartProps } from "../types";
+import Modal from "./Modal";
 
-Chart.register(
+ChartJS.register(
   CategoryScale,
   LinearScale,
   PointElement,
@@ -26,35 +28,111 @@ Chart.register(
   LineController
 );
 
+const ReadingChart = ({ data, label, dataKey, color }: ChartProps) => {
+  const chartRef = useRef<HTMLCanvasElement>(null);
+  const chartInstance = useRef<ChartJS | null>(null);
+
+  useEffect(() => {
+    if (!chartRef.current || !data.length) return;
+
+    if (chartInstance.current) {
+      chartInstance.current.destroy();
+    }
+
+    const ctx = chartRef.current.getContext("2d");
+    if (!ctx) return;
+
+    const chartData: ChartData<"line"> = {
+      labels: data.map((d) => new Date(d.created_at).toLocaleTimeString()),
+      datasets: [
+        {
+          label,
+          data: data.map((d) => Number(d[dataKey])),
+          backgroundColor: color,
+          borderColor: color,
+          tension: 0.1,
+        },
+      ],
+    };
+
+    const options: ChartOptions<"line"> = {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 0 },
+      scales: {
+        y: {
+          beginAtZero: false,
+          title: { display: true, text: "Value" },
+        },
+        x: {
+          title: { display: true, text: "Time" },
+        },
+      },
+    };
+
+    chartInstance.current = new ChartJS(ctx, {
+      type: "line",
+      data: chartData,
+      options: options,
+    });
+
+    return () => {
+      if (chartInstance.current) {
+        chartInstance.current.destroy();
+      }
+    };
+  }, [data, label, dataKey, color]);
+
+  return (
+    <div className="min-w-[600px] h-[300px] sm:h-[400px]">
+      <canvas ref={chartRef} />
+    </div>
+  );
+};
+
 const ReadingCard = ({
   title,
   subtitle,
   value,
   unit,
   isLarge = false,
-}: ReadingCardProps) => {
+  onViewChart,
+}: ReadingCardProps & { onViewChart?: () => void }) => {
   const isMicrobialCard = title === "Microbial Activity";
   const bgColor = isMicrobialCard
     ? Number(value) < 30
-      ? "bg-red-100"
-      : "bg-green-100"
+      ? "bg-red-800"
+      : "bg-transparent"
     : "bg-transparent";
 
   return (
     <div
-      className={`border border-gray-100 ${bgColor} p-6 shadow-sm ${
+      className={`border border-[#FF7737] ${bgColor} p-6 shadow-sm ${
         isLarge ? "h-auto" : ""
       }`}
     >
-      <h3 className={`font-bold ${isLarge ? "text-3xl" : "text-md"}`}>
-        {title}
-      </h3>
-      <p className="text-black/50 text-sm font-thin mb-2">{subtitle}</p>
-      <div className="flex items-baseline gap-2">
-        <div className={`font-bold ${isLarge ? "text-5xl" : "text-2xl"}`}>
-          {value}
+      <div className="flex justify-between items-start">
+        <div>
+          <h3 className={`font-bold ${isLarge ? "text-3xl" : "text-md"}`}>
+            {title}
+          </h3>
+          <p className="text-white/50 text-sm font-thin mb-2">{subtitle}</p>
+          <div className="flex items-baseline gap-2">
+            <div className={`font-bold ${isLarge ? "text-5xl" : "text-2xl"}`}>
+              {value}
+            </div>
+            <div className="text-sm opacity-75">{unit}</div>
+          </div>
         </div>
-        <div className="text-sm opacity-75">{unit}</div>
+        {onViewChart && (
+          <button
+            onClick={onViewChart}
+            className="text-[#FF7737] hover:text-[#FF9966] transition-colors p-2"
+            title={`View ${title} Chart`}
+          >
+            <LineChart className="w-5 h-5" />
+          </button>
+        )}
       </div>
     </div>
   );
@@ -65,8 +143,12 @@ export default function Dashboard() {
   const [error, setError] = useState<string | null>(null);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
   const [isPaused, setIsPaused] = useState(false);
-  const chartRef = useRef<HTMLCanvasElement>(null);
-  const chartInstance = useRef<Chart | null>(null);
+  const [activeChart, setActiveChart] = useState<{
+    isOpen: boolean;
+    title: string;
+    dataKey: keyof SensorReading;
+    color: string;
+  } | null>(null);
   const lastReadingId = useRef<number | null>(null);
   const noChangeCount = useRef(0);
 
@@ -105,75 +187,6 @@ export default function Dashboard() {
     }
   }, [isPaused]);
 
-  useEffect(() => {
-    if (!chartRef.current || !data.length) return;
-
-    if (chartInstance.current) {
-      chartInstance.current.destroy();
-    }
-
-    const ctx = chartRef.current.getContext("2d");
-    if (!ctx) return;
-
-    chartInstance.current = new Chart(ctx, {
-      type: "line",
-      data: {
-        labels: data.map((d) => new Date(d.created_at).toLocaleTimeString()),
-        datasets: [
-          {
-            label: "Microbial Activity (Cfu)",
-            data: data.map((d) => d.microbial_activity),
-            backgroundColor: "#066E19",
-            borderColor: "#066E19",
-            tension: 0.1,
-          },
-          {
-            label: "Temperature (°C)",
-            data: data.map((d) => d.temperature),
-            backgroundColor: "#DC2626",
-            borderColor: "#DC2626",
-            tension: 0.1,
-          },
-          {
-            label: "Humidity (%)",
-            data: data.map((d) => d.humidity),
-            backgroundColor: "#2563EB",
-            borderColor: "#2563EB",
-            tension: 0.1,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        animation: {
-          duration: 0,
-        },
-        scales: {
-          y: {
-            beginAtZero: false,
-            title: {
-              display: true,
-              text: "Values",
-            },
-          },
-          x: {
-            title: {
-              display: true,
-              text: "Time",
-            },
-          },
-        },
-      },
-    });
-
-    return () => {
-      if (chartInstance.current) {
-        chartInstance.current.destroy();
-      }
-    };
-  }, [data]);
-
   const latestReadings = {
     microbial: data[0]?.microbial_activity ?? "-",
     temperature: data[0]?.temperature ? data[0].temperature.toFixed(1) : "-",
@@ -184,11 +197,11 @@ export default function Dashboard() {
   const lastUpdateTime = lastUpdate?.toLocaleString() ?? "No data";
 
   return (
-    <div className="bg-white text-black min-h-screen p-4 sm:p-8">
+    <div className="bg-[#36357F] text-white min-h-screen p-4 sm:p-8">
       <main className="max-w-7xl mx-auto space-y-4">
         <h1 className="text-3xl sm:text-4xl font-bold -mt-2">
           Sensor Readings
-          <span className="text-black/40 font-light text-sm">
+          <span className="text-white/40 font-light text-sm">
             <div>Last updated: {lastUpdateTime}</div>
             <div>
               {isPaused ? (
@@ -208,6 +221,14 @@ export default function Dashboard() {
               value={latestReadings.microbial}
               unit="Cfu"
               isLarge={true}
+              onViewChart={() =>
+                setActiveChart({
+                  isOpen: true,
+                  title: "Microbial Activity",
+                  dataKey: "microbial_activity",
+                  color: "#066E19",
+                })
+              }
             />
           </div>
 
@@ -217,27 +238,66 @@ export default function Dashboard() {
               subtitle="Current environmental temperature"
               value={latestReadings.temperature}
               unit="°C"
+              onViewChart={() =>
+                setActiveChart({
+                  isOpen: true,
+                  title: "Temperature",
+                  dataKey: "temperature",
+                  color: "#DC2626",
+                })
+              }
             />
             <ReadingCard
               title="Humidity"
               subtitle="Relative humidity in the environment"
               value={latestReadings.humidity}
               unit="%"
+              onViewChart={() =>
+                setActiveChart({
+                  isOpen: true,
+                  title: "Humidity",
+                  dataKey: "humidity",
+                  color: "#2563EB",
+                })
+              }
             />
             <ReadingCard
               title="Cloud Index"
               subtitle="Current cloudiness index"
               value={latestReadings.cloud_index}
               unit=""
+              onViewChart={() =>
+                setActiveChart({
+                  isOpen: true,
+                  title: "Cloud Index",
+                  dataKey: "cloud_index",
+                  color: "#9CA3AF",
+                })
+              }
             />
           </div>
         </div>
 
-        <div className="overflow-x-auto">
-          <div className="min-w-[600px] h-[300px] sm:h-[400px] my-12">
-            <canvas ref={chartRef} />
+        <Modal
+          isOpen={activeChart?.isOpen ?? false}
+          onClose={() => setActiveChart(null)}
+        >
+          <div className="p-4">
+            <h2 className="text-xl font-bold mb-4">
+              {activeChart?.title} History
+            </h2>
+            <div className="overflow-x-auto">
+              {activeChart && (
+                <ReadingChart
+                  data={data}
+                  label={activeChart.title}
+                  dataKey={activeChart.dataKey}
+                  color={activeChart.color}
+                />
+              )}
+            </div>
           </div>
-        </div>
+        </Modal>
 
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">

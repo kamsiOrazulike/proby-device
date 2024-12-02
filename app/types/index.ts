@@ -7,6 +7,13 @@ export interface SensorReading {
   created_at: string;
 }
 
+export type ChartProps = {
+  data: SensorReading[];
+  label: string;
+  dataKey: keyof SensorReading;
+  color: string;
+};
+
 export interface ReadingCardProps {
   title: string;
   subtitle: string;

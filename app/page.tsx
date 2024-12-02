@@ -13,7 +13,7 @@ export default function Home() {
   };
 
   return (
-    <div className="w-full bg-white text-black min-h-screen">
+    <div className="w-full bg-[#36357F] text-[#FF7737] min-h-screen">
       {/* Logo */}
       <div
         onClick={handleHomeClick}
@@ -28,8 +28,8 @@ export default function Home() {
             onClick={() => setActiveTab("home")}
             className={`mr-1 px-4 py-2 rounded-full transition-colors duration-150 ${
               activeTab === "home"
-                ? "text-black"
-                : "text-black/20 hover:text-black"
+                ? "text-[#FF7737]"
+                : "text-[#FF7737]/20 hover:text-[#FF7737]"
             }`}
           >
             About Us
@@ -38,8 +38,8 @@ export default function Home() {
             onClick={() => setActiveTab("data")}
             className={`px-4 py-2 rounded-full transition-colors duration-150 ${
               activeTab === "data"
-                ? "text-black"
-                : "text-black/20 hover:text-black"
+                ? "text-[#FF7737]"
+                : "text-[#FF7737]/20 hover:text-[#FF7737]"
             }`}
           >
             Dashboard (Demo)

@@ -11,7 +11,7 @@ const ContactForm: React.FC = () => {
     consent: true,
   });
 
-  // Handle input change
+  // Input
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -31,30 +31,26 @@ const ContactForm: React.FC = () => {
     }
   };
 
-  // Handle form submission
+  // Submission
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     const { firstName, lastName, email, organisation, subject, message } =
       formData;
 
-    // Create email content
     const mailtoLink = `mailto:contact@carboncell.co?subject=${encodeURIComponent(
       subject
     )}&body=${encodeURIComponent(
       `First Name: ${firstName}\nLast Name: ${lastName}\nEmail: ${email}\nOrganisation: ${organisation}\n\nMessage:\n${message}`
     )}`;
-
-    // Open the email client with pre-filled details
     window.location.href = mailtoLink;
   };
 
   return (
-    <div className="py-24 px-12 lg:px-[20rem] bg-white">
+    <div className="py-24 px-12 lg:px-[20rem] bg-[#36357F]">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <h3 className="text-3xl font-black text-center">Get in Touch</h3>
-        <p className="text-black/70 text-center mb-8">
+        <p className="text-white/70 text-center mb-8">
           Fill out the form below!
         </p>
 
@@ -74,7 +70,7 @@ const ContactForm: React.FC = () => {
               value={formData.firstName}
               onChange={handleChange}
               required
-              className="border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
+              className="border bg-transparent border-[#FF7737] p-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
             />
           </div>
 
@@ -89,7 +85,7 @@ const ContactForm: React.FC = () => {
               value={formData.lastName}
               onChange={handleChange}
               required
-              className="border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
+              className="border bg-transparent border-[#FF7737] p-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
             />
           </div>
 
@@ -104,7 +100,7 @@ const ContactForm: React.FC = () => {
               value={formData.email}
               onChange={handleChange}
               required
-              className="border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
+              className="border bg-transparent border-[#FF7737] p-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
             />
           </div>
 
@@ -118,7 +114,7 @@ const ContactForm: React.FC = () => {
               id="organisation"
               value={formData.organisation}
               onChange={handleChange}
-              className="border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
+              className="border bg-transparent border-[#FF7737] p-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
             />
           </div>
 
@@ -133,7 +129,7 @@ const ContactForm: React.FC = () => {
               value={formData.subject}
               onChange={handleChange}
               required
-              className="border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
+              className="border bg-transparent border-[#FF7737] p-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
             />
           </div>
 
@@ -148,7 +144,7 @@ const ContactForm: React.FC = () => {
               onChange={handleChange}
               required
               rows={5}
-              className="border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
+              className="border bg-transparent border-[#FF7737] p-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
             />
           </div>
 
@@ -159,9 +155,9 @@ const ContactForm: React.FC = () => {
               id="consent"
               checked={formData.consent}
               onChange={handleChange}
-              className="mr-2 focus:ring-2 focus:ring-gray-500"
+              className="mr-2 bg-[#FF7737] focus:ring-2 focus:ring-gray-500"
             />
-            <label htmlFor="consent" className="text-sm text-gray-700">
+            <label htmlFor="consent" className="text-sm text-white">
               I want to receive updates.
             </label>
           </div>
@@ -170,7 +166,7 @@ const ContactForm: React.FC = () => {
           <div className="md:col-span-2 text-center">
             <button
               type="submit"
-              className="px-32 py-2 uppercase bg-black border border-black text-white text-sm font-medium hover:bg-transparent hover:text-black transition-all"
+              className="px-32 py-2 uppercase bg-transparent border border-[#FF7737] text-[#FF7737] text-sm font-medium hover:bg-[#FF7737] hover:text-white transition-all"
             >
               Submit
             </button>

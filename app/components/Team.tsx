@@ -9,16 +9,19 @@ const TeamMember: React.FC<TeamMemberProps> = ({
   email,
   linkedin,
 }) => (
-  <div className="flex flex-col bg-gray-100 rounded-sm">
+  <div className="flex flex-col border border-[#FF7737] rounded-md">
     <div className="flex-1 p-6 hover:cursor-default">
-      <h4 className="text-sm uppercase font-light text-black/40">{title}</h4>
-      <h3 className="text-2xl font-normal text-gray-900">{name}</h3>
-      <p className="text-gray-700">{description}</p>
+      <h4 className="text-sm uppercase font-light text-white/40">{title}</h4>
+      <h3 className="text-2xl font-normal text-white">{name}</h3>
+      <p className="text-white">{description}</p>
       <div className="flex items-center justify-between mt-4">
-        <span className="text-gray-600">{email}</span>
+        <span className="text-white">{email}</span>
         <div className="flex gap-4">
           {linkedin && (
-            <a href={linkedin} className="text-gray-600 hover:text-gray-900">
+            <a
+              href={linkedin}
+              className="text-[#FF7737]/40 hover:text-[#FF7737]"
+            >
               <AiFillLinkedin size={20} />
             </a>
           )}
@@ -61,10 +64,10 @@ const TeamSection = () => {
   ];
 
   return (
-    <div className="w-full border-b border-black/20 py-8">
+    <div className="w-full border-b border-white/20 py-8">
       <div className="px-4">
         <h3 className="text-5xl font-thin mb-4">The Team</h3>
-        <p className="text-black/70 mb-8">
+        <p className="text-white/70 mb-8">
           Proby is powered by a multidisciplinary team with expertise in
           agricultural research, industrial design, chemical engineering, and
           software development. Our diverse backgrounds, spanning Nigeria,
@@ -77,7 +80,7 @@ const TeamSection = () => {
           ))}
         </div>
 
-        {/* <div className="w-full md:border-[0.5px] bg-[center_top_-80px] border-black bg-team bg-cover bg-no-repeat h-[200px] md:h-[400px] my-4" /> */}
+        {/* <div className="w-full md:border-[0.5px] bg-[center_top_-80px] border-white bg-team bg-cover bg-no-repeat h-[200px] md:h-[400px] my-4" /> */}
       </div>
     </div>
   );
