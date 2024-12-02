@@ -12,8 +12,7 @@ import {
   ChartData,
   ChartOptions,
 } from "chart.js";
-import { ImConnection } from "react-icons/im";
-import { LineChart } from "lucide-react";
+import { AiOutlineLineChart, AiOutlineWifi } from "react-icons/ai";
 import { ReadingCardProps, SensorReading, ChartProps } from "../types";
 import Modal from "./Modal";
 
@@ -130,7 +129,7 @@ const ReadingCard = ({
             className="text-[#FF7737] hover:text-[#FF9966] transition-colors p-2"
             title={`View ${title} Chart`}
           >
-            <LineChart className="w-5 h-5" />
+            <AiOutlineLineChart className="w-5 h-5" />
           </button>
         )}
       </div>
@@ -315,7 +314,7 @@ export default function Dashboard() {
               className="bg-black text-white px-4 py-2 rounded-full hover:bg-black/60 transition-colors"
             >
               <span className="flex flex-row items-center">
-                <ImConnection className="mr-2" /> Reconnect
+                <AiOutlineWifi className="mr-2" /> Reconnect
               </span>
             </button>
           </div>
