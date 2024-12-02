@@ -46,7 +46,7 @@ const ContactForm: React.FC = () => {
   };
 
   return (
-    <div className="py-24 px-12 lg:px-[20rem] bg-[#36357F]">
+    <div className="py-24 px-8 lg:px-[20rem] bg-[#36357F]">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <h3 className="text-3xl font-black text-center">Get in Touch</h3>
@@ -56,7 +56,7 @@ const ContactForm: React.FC = () => {
 
         {/* Form */}
         <form
-          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+          className="w-full grid grid-cols-1 md:grid-cols-2 gap-6"
           onSubmit={handleSubmit}
         >
           {/* First Name */}
@@ -166,7 +166,7 @@ const ContactForm: React.FC = () => {
           <div className="md:col-span-2 text-center">
             <button
               type="submit"
-              className="px-32 py-2 uppercase bg-transparent border border-[#FF7737] text-[#FF7737] text-sm font-medium hover:bg-[#FF7737] hover:text-white transition-all"
+              className="w-full py-2 uppercase bg-transparent border border-[#FF7737] text-[#FF7737] text-sm font-medium hover:bg-[#FF7737] hover:text-white transition-all"
             >
               Submit
             </button>

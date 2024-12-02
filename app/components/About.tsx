@@ -101,7 +101,7 @@ const About = () => {
         </div>
 
         {/* Text Section */}
-        <div className="md:w-3/5 my-12 px-8">
+        <div className="w-full md:w-3/5 my-12">
           <h3 className="text-4xl font-thin mb-4">What Sets Proby Apart?</h3>
           <p className="text-white/70">
             The market has three main categories of competitors, but Proby
