@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import Dashboard from "./components/Dashboard";
-import About from "./components/Alerts";
+import About from "./components/About";
 import Image from "next/image";
 
 export default function Home() {
