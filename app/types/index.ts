@@ -1,10 +1,11 @@
 export interface SensorReading {
   id: number;
   created_at: string;
-  microbial_activity: number;
+  ph: number;
   temperature: number;
   humidity: number;
-  cloud_index: number;
+  pressure: number;
+  voc_index: string;
 }
 
 export interface ReadingCardProps {

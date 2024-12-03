@@ -64,10 +64,11 @@ export default function Dashboard() {
   }, [isPaused]);
 
   const latestReadings = {
-    microbial: data[0]?.microbial_activity ?? "-",
     temperature: data[0]?.temperature ? data[0].temperature.toFixed(1) : "-",
     humidity: data[0]?.humidity ? data[0].humidity.toFixed(1) : "-",
-    cloud_index: data[0]?.cloud_index ?? "-",
+    pressure: data[0]?.pressure ? data[0].pressure.toFixed(1) : "-",
+    voc_index: data[0]?.voc_index ?? "-",
+    ph: data[0]?.ph ? data[0].ph.toFixed(2) : "-",
   };
 
   const lastUpdateTime = lastUpdate?.toLocaleString() ?? "No data";
@@ -88,69 +89,77 @@ export default function Dashboard() {
           </span>
         </h1>
 
-        <div className="flex flex-col gap-4 my-12">
-          <div className="w-full">
-            <ReadingCard
-              title="Microbial Activity"
-              subtitle="The presence of LIVE microbes"
-              value={latestReadings.microbial}
-              unit="Cfu"
-              isLarge={true}
-              onViewChart={() =>
-                setActiveChart({
-                  isOpen: true,
-                  title: "Microbial Activity",
-                  dataKey: "microbial_activity",
-                  color: "#FF7737",
-                })
-              }
-            />
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <ReadingCard
-              title="Temperature"
-              subtitle="Current environmental temperature"
-              value={latestReadings.temperature}
-              unit="°C"
-              onViewChart={() =>
-                setActiveChart({
-                  isOpen: true,
-                  title: "Temperature",
-                  dataKey: "temperature",
-                  color: "#FF7737",
-                })
-              }
-            />
-            <ReadingCard
-              title="Humidity"
-              subtitle="Relative humidity in the environment"
-              value={latestReadings.humidity}
-              unit="%"
-              onViewChart={() =>
-                setActiveChart({
-                  isOpen: true,
-                  title: "Humidity",
-                  dataKey: "humidity",
-                  color: "#FF7737",
-                })
-              }
-            />
-            <ReadingCard
-              title="Cloud Index"
-              subtitle="Current cloudiness index"
-              value={latestReadings.cloud_index}
-              unit=""
-              onViewChart={() =>
-                setActiveChart({
-                  isOpen: true,
-                  title: "Cloud Index",
-                  dataKey: "cloud_index",
-                  color: "#FF7737",
-                })
-              }
-            />
-          </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+          <ReadingCard
+            title="Temperature"
+            subtitle="Current environmental temperature"
+            value={latestReadings.temperature}
+            unit="°C"
+            onViewChart={() =>
+              setActiveChart({
+                isOpen: true,
+                title: "Temperature",
+                dataKey: "temperature",
+                color: "#FF7737",
+              })
+            }
+          />
+          <ReadingCard
+            title="Humidity"
+            subtitle="Relative humidity in the environment"
+            value={latestReadings.humidity}
+            unit="%"
+            onViewChart={() =>
+              setActiveChart({
+                isOpen: true,
+                title: "Humidity",
+                dataKey: "humidity",
+                color: "#FF7737",
+              })
+            }
+          />
+          <ReadingCard
+            title="VOC Index"
+            subtitle="Volatile Organic Compounds"
+            value={latestReadings.voc_index}
+            unit=""
+            onViewChart={() =>
+              setActiveChart({
+                isOpen: true,
+                title: "VOC Index",
+                dataKey: "voc_index",
+                color: "#FF7737",
+              })
+            }
+          />
+          <ReadingCard
+            title="pH Level"
+            subtitle="Acidity/Alkalinity measurement"
+            value={latestReadings.ph}
+            unit=""
+            onViewChart={() =>
+              setActiveChart({
+                isOpen: true,
+                title: "pH Level",
+                dataKey: "ph",
+                color: "#FF7737",
+              })
+            }
+          />
+          <ReadingCard
+            title="Pressure"
+            subtitle="Atmospheric pressure"
+            value={latestReadings.pressure}
+            unit="hPa"
+            onViewChart={() =>
+              setActiveChart({
+                isOpen: true,
+                title: "Pressure",
+                dataKey: "pressure",
+                color: "#FF7737",
+              })
+            }
+          />
         </div>
 
         <Modal

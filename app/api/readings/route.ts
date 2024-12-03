@@ -31,17 +31,18 @@ export async function POST(request: Request) {
     console.log("Received data:", body);
 
     const insertData = {
-      microbial_activity: Number(body.microbial_activity),
       temperature: Number(body.temperature),
       humidity: Number(body.humidity),
-      cloud_index: Number(body.cloud_index)
+      pressure: Number(body.pressure),
+      voc_index: Number(body.voc_index),
+      ph: Number(body.ph)
     };
 
-    // Add validation
-    if (isNaN(insertData.temperature) || isNaN(insertData.humidity)) {
-      console.error("Invalid temperature or humidity values:", body);
+    // Validation
+    if (Object.values(insertData).some(value => isNaN(value))) {
+      console.error("Invalid sensor values:", body);
       return NextResponse.json(
-        { error: "Invalid temperature or humidity values" },
+        { error: "Invalid sensor values" },
         { status: 400 }
       );
     }
