@@ -1,9 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import Image from "next/image";
-import ContactForm from "../../components/Form";
-import TeamSection from "../../components/Team";
-import ImageWithLoader from "../../components/ImageWithLoader";
+import ContactForm from "../components/Form";
+import TeamSection from "../components/Team";
+import ImageWithLoader from "../components/ImageWithLoader";
 
 const About = () => {
   return (

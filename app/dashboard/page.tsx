@@ -1,11 +1,11 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
 import { AiOutlineWifi } from "react-icons/ai";
-import { SensorReading } from "../../types";
-import Modal from "../../components/Modal";
-import ReadingCard from "../../components/ReadingCard";
-import ReadingChart from "../../components/ReadingChart";
-import GraphicUserInterface from "../../components/Animation";
+import { SensorReading } from "../types";
+import Modal from "../components/Modal";
+import ReadingCard from "../components/ReadingCard";
+import ReadingChart from "../components/ReadingChart";
+import GraphicUserInterface from "../components/Animation";
 
 export default function Dashboard() {
   const [data, setData] = useState<SensorReading[]>([]);
