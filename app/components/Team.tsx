@@ -1,6 +1,6 @@
 import React from "react";
 import { TeamMemberProps } from "../types";
-import { AiFillLinkedin } from "react-icons/ai";
+import { AiFillLinkedin, AiOutlineMail } from "react-icons/ai";
 
 const TeamMember: React.FC<TeamMemberProps> = ({
   name,
@@ -15,8 +15,17 @@ const TeamMember: React.FC<TeamMemberProps> = ({
       <h3 className="text-2xl font-normal text-white">{name}</h3>
       <p className="text-white">{description}</p>
       <div className="flex items-center justify-between mt-4">
-        <span className="text-white">{email}</span>
         <div className="flex gap-4">
+          {email && (
+            <a
+              href={`mailto:${email}`}
+              className="text-[#FF7737]/40 hover:text-[#FF7737]"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <AiOutlineMail size={20} />
+            </a>
+          )}
           {linkedin && (
             <a
               href={linkedin}

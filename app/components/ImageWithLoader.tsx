@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 
@@ -31,7 +32,7 @@ const ImageWithLoader = ({
   }, [loadingTime]);
 
   return (
-    <div className="relative h-[400px] -mt-4 mb-8">
+    <div className="relative h-[300px] mt-8">
       {isLoading && (
         <div className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 absolute inset-0 z-10">
           <div className="flex items-center justify-center w-full h-full bg-[#1a1a3e] rounded">
