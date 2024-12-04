@@ -2,20 +2,17 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function Navbar() {
-  const [activePath, setActivePath] = useState(window.location.pathname);
+  const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className="bg-[#36357F] text-[#FF7737] w-full fixed z-50">
+    <nav className="bg-[#36357F] text-[#FF7737] w-full relative">
       <div className="max-w-7xl mx-auto px-4 py-4">
         <div className="flex items-center justify-between md:justify-start relative">
-          <Link
-            href="/"
-            onClick={() => setActivePath("/")}
-            className="flex items-center"
-          >
+          <Link href="/" className="flex items-center">
             <Image
               src="/static/logo-original.svg"
               width={100}
@@ -51,12 +48,9 @@ export default function Navbar() {
                 <div className="flex flex-col gap-2">
                   <Link
                     href="/about"
-                    onClick={() => {
-                      setActivePath("/about");
-                      setIsMenuOpen(false);
-                    }}
+                    onClick={() => setIsMenuOpen(false)}
                     className={`px-4 py-2 rounded-full text-right transition-colors duration-150 ${
-                      activePath === "/about"
+                      pathname === "/about"
                         ? "text-[#FF7737]"
                         : "text-[#FF7737]/20 hover:text-[#FF7737]"
                     }`}
@@ -65,12 +59,9 @@ export default function Navbar() {
                   </Link>
                   <Link
                     href="/dashboard"
-                    onClick={() => {
-                      setActivePath("/dashboard");
-                      setIsMenuOpen(false);
-                    }}
+                    onClick={() => setIsMenuOpen(false)}
                     className={`px-4 py-2 rounded-full text-right transition-colors duration-150 ${
-                      activePath === "/dashboard"
+                      pathname === "/dashboard"
                         ? "text-[#FF7737]"
                         : "text-[#FF7737]/20 hover:text-[#FF7737]"
                     }`}
@@ -86,9 +77,8 @@ export default function Navbar() {
             <div className="flex gap-1">
               <Link
                 href="/about"
-                onClick={() => setActivePath("/about")}
                 className={`px-4 py-2 rounded-full transition-colors duration-150 ${
-                  activePath === "/about"
+                  pathname === "/about"
                     ? "text-[#FF7737]"
                     : "text-[#FF7737]/20 hover:text-[#FF7737]"
                 }`}
@@ -97,9 +87,8 @@ export default function Navbar() {
               </Link>
               <Link
                 href="/dashboard"
-                onClick={() => setActivePath("/dashboard")}
                 className={`px-4 py-2 rounded-full transition-colors duration-150 ${
-                  activePath === "/dashboard"
+                  pathname === "/dashboard"
                     ? "text-[#FF7737]"
                     : "text-[#FF7737]/20 hover:text-[#FF7737]"
                 }`}
