@@ -7,7 +7,7 @@ import ImageWithLoader from "../../components/ImageWithLoader";
 
 const About = () => {
   return (
-    <div className="flex flex-col w-full bg-[#36357F] py-12">
+    <div className="flex flex-col w-full bg-[#36357F] py-24">
       {/* Section 1 */}
       <div className="flex flex-col md:flex-row items-end md:space-x-12 px-8 mb-8 border-b border-white/20 pb-8">
         {/* Left Column */}
@@ -25,7 +25,7 @@ const About = () => {
         </div>
 
         {/* Right Column */}
-        <div className="w-fullmd:w-1/2 space-y-8">
+        <div className="md:w-1/2 space-y-8">
           <div>
             <h3 className="text-2xl font-thin mb-2">The Problem</h3>
             <p className="text-white/70">
