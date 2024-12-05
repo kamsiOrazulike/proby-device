@@ -82,7 +82,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="bg-[#36357F] text-white min-h-screen px-4 py-24 sm:px-8">
+    <div className="bg-[#36357F] text-white min-h-screen px-4 py-12 md:py-24 sm:px-8">
       <main className="max-w-7xl mx-auto space-y-4">
         <h1 className="text-3xl sm:text-4xl font-bold">
           Sensor Readings

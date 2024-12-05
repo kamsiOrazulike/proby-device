@@ -26,6 +26,44 @@ ChartJS.register(
   LineController
 );
 
+//For Scale
+const getScaleConfig = (dataKey: string) => {
+  const defaultScale = {
+    min: undefined,
+    max: undefined,
+  };
+
+  switch (dataKey) {
+    case "temperature":
+      return {
+        min: 15,
+        max: 30,
+      };
+    case "humidity":
+      return {
+        min: 0,
+        max: 100,
+      };
+    case "pressure":
+      return {
+        min: 900,
+        max: 1100,
+      };
+    case "voc_index":
+      return {
+        min: 0,
+        max: 500,
+      };
+    case "ph":
+      return {
+        min: 0,
+        max: 14,
+      };
+    default:
+      return defaultScale;
+  }
+};
+
 const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
   const chartRef = useRef<HTMLCanvasElement>(null);
   const chartInstance = useRef<ChartJS | null>(null);
@@ -41,11 +79,13 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
     if (!ctx) return;
 
     const chartData: ChartData<"line"> = {
-      labels: data.map((d) => new Date(d.created_at).toLocaleTimeString()),
+      labels: [...data]
+        .reverse()
+        .map((d) => new Date(d.created_at).toLocaleTimeString()),
       datasets: [
         {
           label,
-          data: data.map((d) => Number(d[dataKey])),
+          data: [...data].reverse().map((d) => Number(d[dataKey])),
           backgroundColor: "#FF7737",
           borderColor: "#FF7737",
           tension: 0.1,
@@ -63,6 +103,7 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
       animation: { duration: 0 },
       scales: {
         y: {
+          ...getScaleConfig(dataKey),
           beginAtZero: false,
           title: {
             display: true,
