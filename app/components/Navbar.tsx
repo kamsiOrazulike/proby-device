@@ -77,20 +77,20 @@ export default function Navbar() {
             <div className="flex gap-1">
               <Link
                 href="/about"
-                className={`px-4 py-2 rounded-full transition-colors duration-150 ${
+                className={`uppercase tracking-wide px-4 py-2 rounded-full transition-colors duration-150 ${
                   pathname === "/about"
                     ? "text-[#FF7737]"
-                    : "text-[#FF7737]/20 hover:text-[#FF7737]"
+                    : "text-[#FF7737]/40 hover:text-[#FF7737]"
                 }`}
               >
                 About Us
               </Link>
               <Link
                 href="/dashboard"
-                className={`px-4 py-2 rounded-full transition-colors duration-150 ${
+                className={`uppercase tracking-wide px-4 py-2 rounded-full transition-colors duration-150 ${
                   pathname === "/dashboard"
                     ? "text-[#FF7737]"
-                    : "text-[#FF7737]/20 hover:text-[#FF7737]"
+                    : "text-[#FF7737]/40 hover:text-[#FF7737]"
                 }`}
               >
                 Dashboard (Demo)

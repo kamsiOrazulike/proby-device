@@ -45,7 +45,7 @@ const TeamSection = () => {
     {
       name: "Rosalie Valentiny",
       title: "Founder",
-      description: "2+ years experience in Data Science.",
+      description: "2+ years experience in Data Science",
       email: "rosalie.valentiny23@imperial.ac.uk",
       linkedin: "https://www.linkedin.com/in/rosalie-valentiny/",
     },
@@ -66,7 +66,7 @@ const TeamSection = () => {
     {
       name: "Kamsi Orazulike",
       title: "Head of Technology",
-      description: "2+ years experience in Fullstack Development (Javascript)",
+      description: "2+ years experience in Software Development",
       email: "kamsiyonna.orazulike23@imperial.ac.uk",
       linkedin: "https://www.linkedin.com/in/kamsiyonnaorazulike",
     },
