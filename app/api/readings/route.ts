@@ -35,11 +35,11 @@ export async function POST(request: Request) {
       humidity: Number(body.humidity),
       pressure: Number(body.pressure),
       voc_index: Number(body.voc_index),
-      ph: Number(body.ph)
+      ph: Number(body.ph),
     };
 
     // Validation
-    if (Object.values(insertData).some(value => isNaN(value))) {
+    if (Object.values(insertData).some((value) => isNaN(value))) {
       console.error("Invalid sensor values:", body);
       return NextResponse.json(
         { error: "Invalid sensor values" },
@@ -62,6 +62,24 @@ export async function POST(request: Request) {
     console.error("POST Error:", error);
     return NextResponse.json(
       { error: "Failed to save reading" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE() {
+  try {
+    const { error } = await supabase
+      .from("sensor_readings")
+      .delete()
+      .neq("id", 0); //delete all readings
+
+    if (error) throw error;
+    return NextResponse.json({ message: "All readings cleared" });
+  } catch (error) {
+    console.error("DELETE Error:", error);
+    return NextResponse.json(
+      { error: "Failed to clear readings" },
       { status: 500 }
     );
   }

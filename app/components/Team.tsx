@@ -9,7 +9,7 @@ const TeamMember: React.FC<TeamMemberProps> = ({
   email,
   linkedin,
 }) => (
-  <div className="flex flex-col border border-[#FF7737] rounded-md">
+  <div className="flex flex-col border border-white rounded-md">
     <div className="flex-1 p-6 hover:cursor-default">
       <h4 className="text-sm uppercase font-light text-white/40">{title}</h4>
       <h3 className="text-2xl font-normal text-white">{name}</h3>
@@ -19,7 +19,7 @@ const TeamMember: React.FC<TeamMemberProps> = ({
           {email && (
             <a
               href={`mailto:${email}`}
-              className="text-[#FF7737]/40 hover:text-[#FF7737]"
+              className="text-white/40 hover:text-white"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -29,7 +29,7 @@ const TeamMember: React.FC<TeamMemberProps> = ({
           {linkedin && (
             <a
               href={linkedin}
-              className="text-[#FF7737]/40 hover:text-[#FF7737]"
+              className="text-white/40 hover:text-white"
             >
               <AiFillLinkedin size={20} />
             </a>
@@ -89,7 +89,7 @@ const TeamSection = () => {
           ))}
         </div>
 
-        {/* <div className="w-full md:border-[0.5px] bg-[center_top_-80px] border-white bg-team bg-cover bg-no-repeat h-[200px] md:h-[400px] my-4" /> */}
+        {/* <div className="w-full md:border-[0.5px] bg-[center_top_-80px] border-black bg-team bg-cover bg-no-repeat h-[200px] md:h-[400px] my-4" /> */}
       </div>
     </div>
   );

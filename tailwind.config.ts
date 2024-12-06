@@ -17,7 +17,10 @@ export default {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
-        "hero-1": "url('/static/imgs/hero3.svg')",
+        "hero-1": "url('/static/imgs/hero-final.svg')",
+        "hero-2": "url('/static/imgs/hero-final-2.svg')",
+        "hero-3": "url('/static/imgs/hero-final-3.svg')",
+        "hero-4": "url('/static/imgs/hero-zoom.svg')",
         "schematic-1": "url('/static/imgs/proby.png')",
         "schematic-2": "url('/static/imgs/proby1.png')",
         "fermomap-1": "url('/static/imgs/fermomap.png')",

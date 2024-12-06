@@ -46,11 +46,11 @@ const ContactForm: React.FC = () => {
   };
 
   return (
-    <div className="py-24 px-8 lg:px-[20rem] bg-[#36357F]">
-      <div className="max-w-4xl mx-auto">
+    <div className="py-24 px-8 lg:px-[20rem] bg-hero-2 bg-cover bg-no-repeat">
+      <div className="max-w-4xl mx-auto bg-white/50 backdrop-blur-sm text-black p-6 rounded-lg">
         {/* Header */}
         <h3 className="text-3xl font-black text-center">Get in Touch</h3>
-        <p className="text-white/70 text-center mb-8">
+        <p className="text-black/70 text-center mb-8">
           Fill out the form below!
         </p>
 
@@ -70,7 +70,7 @@ const ContactForm: React.FC = () => {
               value={formData.firstName}
               onChange={handleChange}
               required
-              className="border bg-transparent border-[#FF7737] p-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
+              className="border bg-transparent border-[#1A1A3E] p-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
             />
           </div>
 
@@ -85,7 +85,7 @@ const ContactForm: React.FC = () => {
               value={formData.lastName}
               onChange={handleChange}
               required
-              className="border bg-transparent border-[#FF7737] p-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
+              className="border bg-transparent border-[#1A1A3E] p-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
             />
           </div>
 
@@ -100,7 +100,7 @@ const ContactForm: React.FC = () => {
               value={formData.email}
               onChange={handleChange}
               required
-              className="border bg-transparent border-[#FF7737] p-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
+              className="border bg-transparent border-[#1A1A3E] p-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
             />
           </div>
 
@@ -114,7 +114,7 @@ const ContactForm: React.FC = () => {
               id="organisation"
               value={formData.organisation}
               onChange={handleChange}
-              className="border bg-transparent border-[#FF7737] p-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
+              className="border bg-transparent border-[#1A1A3E] p-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
             />
           </div>
 
@@ -129,7 +129,7 @@ const ContactForm: React.FC = () => {
               value={formData.subject}
               onChange={handleChange}
               required
-              className="border bg-transparent border-[#FF7737] p-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
+              className="border bg-transparent border-[#1A1A3E] p-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
             />
           </div>
 
@@ -144,7 +144,7 @@ const ContactForm: React.FC = () => {
               onChange={handleChange}
               required
               rows={5}
-              className="border bg-transparent border-[#FF7737] p-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
+              className="border bg-transparent border-[#1A1A3E] p-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
             />
           </div>
 
@@ -155,9 +155,9 @@ const ContactForm: React.FC = () => {
               id="consent"
               checked={formData.consent}
               onChange={handleChange}
-              className="mr-2 bg-[#FF7737] focus:ring-2 focus:ring-gray-500"
+              className="mr-2 bg-[#1A1A3E] focus:ring-2 focus:ring-gray-500"
             />
-            <label htmlFor="consent" className="text-sm text-white">
+            <label htmlFor="consent" className="text-sm text-black">
               I want to receive updates.
             </label>
           </div>
@@ -166,7 +166,7 @@ const ContactForm: React.FC = () => {
           <div className="md:col-span-2 text-center">
             <button
               type="submit"
-              className="w-full py-2 uppercase bg-transparent border border-[#FF7737] text-[#FF7737] text-sm font-medium hover:bg-[#FF7737] hover:text-white transition-all"
+              className="w-full py-2 uppercase bg-transparent border border-[#1A1A3E] text-[#1A1A3E] text-sm font-medium hover:bg-[#1A1A3E] hover:text-white transition-all"
             >
               Submit
             </button>

@@ -9,14 +9,14 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className="bg-[#36357F] text-[#FF7737] w-full relative">
-      <div className="max-w-7xl mx-auto px-4 py-4">
+    <nav className="z-50 fixed w-full bg-black/10 backdrop-blur-sm p-3 md:p-6 text-black">
+      <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between md:justify-start relative">
           <Link href="/" className="flex items-center">
             <Image
-              src="/static/UX/logo-original.svg"
-              width={100}
-              height={100}
+              src="/static/UX/logo-white.svg"
+              width={150}
+              height={150}
               alt="logo"
               priority
             />
@@ -26,17 +26,17 @@ export default function Navbar() {
             <button onClick={() => setIsMenuOpen(!isMenuOpen)}>
               <div className="space-y-2">
                 <span
-                  className={`block w-8 h-0.5 bg-[#FF7737] transform transition duration-300 ${
+                  className={`block w-8 h-0.5 bg-white transform transition duration-300 ${
                     isMenuOpen ? "rotate-45 translate-y-2.5" : ""
                   }`}
                 ></span>
                 <span
-                  className={`block w-8 h-0.5 bg-[#FF7737] transform transition duration-300 ${
+                  className={`block w-8 h-0.5 bg-white transform transition duration-300 ${
                     isMenuOpen ? "opacity-0" : ""
                   }`}
                 ></span>
                 <span
-                  className={`block w-8 h-0.5 bg-[#FF7737] transform transition duration-300 ${
+                  className={`block w-8 h-0.5 bg-white transform transition duration-300 ${
                     isMenuOpen ? "-rotate-45 -translate-y-2.5" : ""
                   }`}
                 ></span>
@@ -44,15 +44,15 @@ export default function Navbar() {
             </button>
 
             {isMenuOpen && (
-              <div className="absolute right-0 top-full mt-2 min-w-[200px] z-50">
-                <div className="flex flex-col gap-2">
+              <div className="z-50 absolute right-0 top-full mt-4 min-w-[200px]">
+                <div className="w-full flex flex-col justify-between gap-2 text-sm font-bold">
                   <Link
                     href="/"
                     onClick={() => setIsMenuOpen(false)}
-                    className={`px-4 py-2 rounded-full text-right transition-colors duration-150 ${
+                    className={`uppercase px-4 py-2 rounded-full text-right transition-colors duration-150 ${
                       pathname === "/"
-                        ? "text-[#FF7737]"
-                        : "text-[#FF7737]/20 hover:text-[#FF7737]"
+                        ? "text-white"
+                        : "text-white/20 hover:text-white"
                     }`}
                   >
                     Home
@@ -60,10 +60,10 @@ export default function Navbar() {
                   <Link
                     href="/about"
                     onClick={() => setIsMenuOpen(false)}
-                    className={`px-4 py-2 rounded-full text-right transition-colors duration-150 ${
+                    className={`uppercase px-4 py-2 rounded-full text-right transition-colors duration-150 ${
                       pathname === "/about"
-                        ? "text-[#FF7737]"
-                        : "text-[#FF7737]/20 hover:text-[#FF7737]"
+                        ? "text-white"
+                        : "text-white/20 hover:text-white"
                     }`}
                   >
                     About Us
@@ -71,10 +71,10 @@ export default function Navbar() {
                   <Link
                     href="/dashboard"
                     onClick={() => setIsMenuOpen(false)}
-                    className={`px-4 py-2 rounded-full text-right transition-colors duration-150 ${
+                    className={`uppercase px-4 py-2 rounded-full text-right transition-colors duration-150 ${
                       pathname === "/dashboard"
-                        ? "text-[#FF7737]"
-                        : "text-[#FF7737]/20 hover:text-[#FF7737]"
+                        ? "text-white"
+                        : "text-white/20 hover:text-white"
                     }`}
                   >
                     Dashboard (Demo)
@@ -90,8 +90,8 @@ export default function Navbar() {
                 href="/about"
                 className={`uppercase tracking-wide px-4 py-2 rounded-full transition-colors duration-150 ${
                   pathname === "/about"
-                    ? "text-[#FF7737]"
-                    : "text-[#FF7737]/40 hover:text-[#FF7737]"
+                    ? "text-white"
+                    : "text-white/40 hover:text-white"
                 }`}
               >
                 About Us
@@ -100,8 +100,8 @@ export default function Navbar() {
                 href="/dashboard"
                 className={`uppercase tracking-wide px-4 py-2 rounded-full transition-colors duration-150 ${
                   pathname === "/dashboard"
-                    ? "text-[#FF7737]"
-                    : "text-[#FF7737]/40 hover:text-[#FF7737]"
+                    ? "text-white"
+                    : "text-white/40 hover:text-white"
                 }`}
               >
                 Dashboard (Demo)

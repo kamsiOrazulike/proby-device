@@ -7,7 +7,7 @@ import ImageWithLoader from "../components/ImageWithLoader";
 
 const About = () => {
   return (
-    <div className="flex flex-col w-full bg-[#36357F] py-12 md:py-24">
+    <div className="flex flex-col w-full bg-[#36357F] pt-24 md:pt-44">
       {/* Section 1 */}
       <div className="flex flex-col md:flex-row items-end md:space-x-12 px-8 mb-8 border-b border-white/20 pb-8">
         {/* Left Column */}
@@ -15,7 +15,7 @@ const About = () => {
           {/* Hero Image */}
           <div className="relative">
             <ImageWithLoader
-              src="/static/imgs/hero3.png"
+              src="/static/imgs/hero-final.svg"
               alt="Hero"
               fill={true}
               loadingTime={2000}

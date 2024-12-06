@@ -1,13 +1,14 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
-import { AiOutlineWifi } from "react-icons/ai";
+import { AiOutlinePoweroff, AiOutlineWifi } from "react-icons/ai";
 import { SensorReading } from "../types";
-import Modal from "../components/Modal";
-import ReadingCard from "../components/ReadingCard";
-import ReadingChart from "../components/ReadingChart";
-import GraphicUserInterface from "../components/Animation";
+import { Modal, ConfirmModal } from "./components/Modal";
+import ReadingCard from "./components/ReadingCard";
+import ReadingChart from "./components/ReadingChart";
+import Notification from "../dashboard/components/Notification";
 
 export default function Dashboard() {
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [data, setData] = useState<SensorReading[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
@@ -77,24 +78,66 @@ export default function Dashboard() {
 
   const getConnectionStatus = () => {
     if (isPaused) return "Device not found.";
-    if (isConnected) return <span className="text-green-500">Connected</span>;
-    return <span className="animate-pulse">Searching...</span>;
+    if (isConnected)
+      return <span className="text-green-500 text-md animate-pulse">• Connected</span>;
+    return <span className="text-md animate-pulse">Searching for device...</span>;
+  };
+
+  const clearData = async () => {
+    try {
+      const response = await fetch("/api/readings", {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to clear data");
+      }
+
+      setData([]);
+      setLastUpdate(null);
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "Failed to clear data");
+      console.error("Clear data error:", error);
+    }
   };
 
   return (
-    <div className="bg-[#36357F] text-white min-h-screen px-4 py-12 md:py-24 sm:px-8">
-      <main className="max-w-7xl mx-auto space-y-4">
-        <h1 className="text-3xl sm:text-4xl font-bold">
-          Sensor Readings
-          <span className="text-[#FF7737] font-light text-sm">
-            <div>{getConnectionStatus()}</div>
-          </span>
-        </h1>
+    <div className="bg-[#36357F] text-white min-h-screen pt-24 md:pt-28 px-4 sm:px-8">
+      <main className="w-full mx-auto">
         {/* Animation */}
-        <GraphicUserInterface />
+        <div className="w-full h-[300px] flex flex-col md:flex-row gap-4">
+          <div className="w-full h-full md:w-1/2 bg-hero-4 bg-cover bg-no-repeat relative">
+            <div className="absolute top-4 left-4">
+              <button
+                onClick={() => setShowConfirmModal(true)}
+                className="text-red-500 hover:text-red-400 transition-all duration-150"
+              >
+                <AiOutlinePoweroff className="w-8 h-8" />
+              </button>
+            </div>
+            <div className="absolute bottom-4 right-4">
+              <span className="text-[#FF7737] font-light text-sm">
+                {getConnectionStatus()}
+              </span>
+            </div>
+          </div>
+
+          <div className="w-full md:w-1/2">
+            <Notification data={data} />
+          </div>
+        </div>
+
+        {/* Confirm Modal */}
+        <ConfirmModal
+          isOpen={showConfirmModal}
+          onClose={() => setShowConfirmModal(false)}
+          onConfirm={clearData}
+          title="Clear Historical Data"
+          message="Are you sure you want to clear all historical data? This action cannot be undone."
+        />
 
         {/* Reading Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+        <div className="py-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
           <ReadingCard
             title="Temperature"
             subtitle="Current environmental temperature"
@@ -167,6 +210,7 @@ export default function Dashboard() {
           />
         </div>
 
+        {/* Chart Modal */}
         <Modal
           isOpen={activeChart?.isOpen ?? false}
           onClose={() => setActiveChart(null)}
