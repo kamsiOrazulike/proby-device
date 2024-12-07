@@ -4,6 +4,9 @@ import ContactForm from "../components/Form";
 import TeamSection from "../components/Team";
 import ImageWithLoader from "../components/ImageWithLoader";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 const About = () => {
   return (
     <div className="flex flex-col w-full bg-[#36357F] pt-24 md:pt-44">
