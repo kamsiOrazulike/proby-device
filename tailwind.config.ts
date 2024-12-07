@@ -21,6 +21,8 @@ export default {
         "hero-2": "url('/static/imgs/hero-final-2.svg')",
         "hero-3": "url('/static/imgs/hero-final-3.svg')",
         "hero-4": "url('/static/imgs/hero-zoom.svg')",
+        "hero-model": "url('/static/imgs/hero-no-bg.svg')",
+        "hero-model-2": "url('/static/imgs/hero-no-bg-2.svg')",
         "schematic-1": "url('/static/imgs/proby.png')",
         "schematic-2": "url('/static/imgs/proby1.png')",
         "fermomap-1": "url('/static/imgs/fermomap.png')",

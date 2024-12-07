@@ -11,7 +11,6 @@ export default function Dashboard() {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [data, setData] = useState<SensorReading[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
   const [isPaused, setIsPaused] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
   const [activeChart, setActiveChart] = useState<{
@@ -44,13 +43,11 @@ export default function Dashboard() {
         } else {
           noChangeCount.current = 0;
           lastReadingId.current = readings[0]?.id;
-          // Track unique IDs
           uniqueIdsCount.current.add(readings[0]?.id);
           if (uniqueIdsCount.current.size >= 3) {
             setIsConnected(true);
           }
           setData(readings);
-          setLastUpdate(new Date());
         }
       } catch (err) {
         console.error("Fetch error:", err);
@@ -74,13 +71,17 @@ export default function Dashboard() {
     ph: data[0]?.ph ? data[0].ph.toFixed(2) : "-",
   };
 
-  const lastUpdateTime = lastUpdate?.toLocaleString() ?? "No data";
-
   const getConnectionStatus = () => {
     if (isPaused) return "Device not found.";
     if (isConnected)
-      return <span className="text-green-500 text-md animate-pulse">• Connected</span>;
-    return <span className="text-md animate-pulse">Searching for device...</span>;
+      return (
+        <span className="text-green-500 text-md animate-pulse">
+          • Connected
+        </span>
+      );
+    return (
+      <span className="text-md animate-pulse">Searching for device...</span>
+    );
   };
 
   const clearData = async () => {
@@ -94,7 +95,6 @@ export default function Dashboard() {
       }
 
       setData([]);
-      setLastUpdate(null);
     } catch (error) {
       setError(error instanceof Error ? error.message : "Failed to clear data");
       console.error("Clear data error:", error);
@@ -106,7 +106,7 @@ export default function Dashboard() {
       <main className="w-full mx-auto">
         {/* Animation */}
         <div className="w-full h-[300px] flex flex-col md:flex-row gap-4">
-          <div className="w-full h-full md:w-1/2 bg-hero-4 bg-cover bg-no-repeat relative">
+          <div className="w-full h-full md:w-1/2 bg-hero-model bg-center bg-contain bg-no-repeat relative">
             <div className="absolute top-4 left-4">
               <button
                 onClick={() => setShowConfirmModal(true)}
@@ -167,8 +167,8 @@ export default function Dashboard() {
             }
           />
           <ReadingCard
-            title="VOC Index"
-            subtitle="Volatile Organic Compounds"
+            title="CO2 Levels"
+            subtitle="CO2 Levels in environment"
             value={latestReadings.voc_index}
             unit=""
             onViewChart={() =>
@@ -227,9 +227,6 @@ export default function Dashboard() {
                   dataKey={activeChart.dataKey}
                 />
               )}
-            </div>
-            <div className="text-center mt-16 font-light text-xs">
-              Last updated: {lastUpdateTime}
             </div>
           </div>
         </Modal>

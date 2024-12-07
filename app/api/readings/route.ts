@@ -11,8 +11,7 @@ export async function GET() {
     const { data, error } = await supabase
       .from("sensor_readings")
       .select("*")
-      .order("created_at", { ascending: false })
-      .limit(50);
+      .order("created_at", { ascending: false });
 
     if (error) throw error;
     return NextResponse.json(data);

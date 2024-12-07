@@ -83,29 +83,17 @@ const About = () => {
 
       {/* Section 4: Market Differentiation */}
       <div className="py-12 px-8 flex flex-col md:flex-row items-start align-baseline space-y-8 md:space-y-0 md:space-x-8 border-b border-white/20 pb-8">
-        <div className="flex flex-col space-y-4">
-          <div className="w-full">
-            <Image
-              src="/static/imgs/schematics.png"
-              alt="Exploded view"
-              width={800}
-              height={800}
-              className="rounded-lg mx-auto md:mx-0"
-            />
-          </div>
-        </div>
-
         {/* Text Section */}
         <div className="w-full md:w-3/5 my-12">
           <h3 className="text-4xl font-thin mb-4">What Sets Proby Apart?</h3>
           <p className="text-white/70">
-            The market has three main categories of competitors, but Proby
-            stands out:
+            The market has three main categories of competitors, but here are
+            some areas where PROBY stands out:
           </p>
           <ul className="list-disc list-inside space-y-2 mt-4">
             <li>
               <b>Fermentation Detectors:</b> Products like Tilt or Plaato focus
-              on parameters like CO₂ or temperature. Proby uniquely measures
+              on parameters like CO₂ or temperature. PROBY uniquely measures
               microbial activity and bioavailability, directly addressing gut
               health.
             </li>
@@ -120,6 +108,17 @@ const About = () => {
               into the active benefits of their fermented foods.
             </li>
           </ul>
+        </div>
+        <div className="flex flex-col space-y-4">
+          <div className="w-full">
+            <Image
+              src="/static/imgs/schematics.svg"
+              alt="Exploded view"
+              width={800}
+              height={800}
+              className="rounded-lg mx-auto md:mx-0"
+            />
+          </div>
         </div>
       </div>
 

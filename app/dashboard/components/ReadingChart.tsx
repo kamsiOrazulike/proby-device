@@ -13,6 +13,7 @@ import {
   ChartData,
   ChartOptions,
 } from "chart.js";
+import zoomPlugin from "chartjs-plugin-zoom";
 import { ChartProps } from "../../types";
 
 ChartJS.register(
@@ -23,10 +24,10 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  LineController
+  LineController,
+  zoomPlugin
 );
 
-//For Scale
 const getScaleConfig = (dataKey: string) => {
   const defaultScale = {
     min: undefined,
@@ -68,6 +69,12 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
   const chartRef = useRef<HTMLCanvasElement>(null);
   const chartInstance = useRef<ChartJS | null>(null);
 
+  const resetZoom = () => {
+    if (chartInstance.current) {
+      chartInstance.current.resetZoom();
+    }
+  };
+
   useEffect(() => {
     if (!chartRef.current || !data.length) return;
 
@@ -78,14 +85,34 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
     const ctx = chartRef.current.getContext("2d");
     if (!ctx) return;
 
+    // Sort data chronologically
+    const sortedData = [...data].sort(
+      (a, b) =>
+        new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+    );
+
+    // Calculate time elapsed
+    const startTime = new Date(sortedData[0].created_at).getTime();
+    const endTime = new Date(
+      sortedData[sortedData.length - 1].created_at
+    ).getTime();
+    const totalMinutesElapsed = (endTime - startTime) / 60000;
+    const isLongDuration = totalMinutesElapsed >= 360; // 6 hours or more
+
+    const getTimeElapsed = (timestamp: string) => {
+      const elapsed = new Date(timestamp).getTime() - startTime;
+      if (isLongDuration) {
+        return (elapsed / 3600000).toFixed(1); // Convert to hours
+      }
+      return (elapsed / 60000).toFixed(1); // Keep as minutes
+    };
+
     const chartData: ChartData<"line"> = {
-      labels: [...data]
-        .reverse()
-        .map((d) => new Date(d.created_at).toLocaleTimeString()),
+      labels: sortedData.map((d) => getTimeElapsed(d.created_at)),
       datasets: [
         {
           label,
-          data: [...data].reverse().map((d) => Number(d[dataKey])),
+          data: sortedData.map((d) => Number(d[dataKey])),
           backgroundColor: "#FF7737",
           borderColor: "#FF7737",
           tension: 0.1,
@@ -93,6 +120,7 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
           pointBorderColor: "#FF7737",
           pointHoverBackgroundColor: "#FF9966",
           pointHoverBorderColor: "#FF9966",
+          pointRadius: 1,
         },
       ],
     };
@@ -109,33 +137,35 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
             display: true,
             text: "Value",
             color: "white",
-            font: {
-              size: 12,
-            },
+            font: { size: 12 },
           },
           ticks: {
             color: "white",
-            font: {
-              size: 11,
-            },
+            font: { size: 11 },
           },
           grid: {
             color: "rgba(255, 255, 255, 0.1)",
           },
         },
         x: {
+          min: 0,
+          max: isLongDuration
+            ? Math.ceil(totalMinutesElapsed / 60)
+            : Math.ceil(totalMinutesElapsed),
           title: {
             display: true,
-            text: "Time",
+            text: isLongDuration
+              ? "Time Elapsed (hours)"
+              : "Time Elapsed (minutes)",
             color: "white",
-            font: {
-              size: 12,
-            },
+            font: { size: 12 },
           },
           ticks: {
             color: "white",
-            font: {
-              size: 11,
+            font: { size: 11 },
+            stepSize: isLongDuration ? 6 : 1,
+            callback: function (value) {
+              return `${value}${isLongDuration ? "h" : "min"}`;
             },
           },
           grid: {
@@ -144,12 +174,38 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
         },
       },
       plugins: {
+        zoom: {
+          pan: {
+            enabled: true,
+            mode: "xy",
+            modifierKey: "shift",
+          },
+          zoom: {
+            wheel: {
+              enabled: true,
+              speed: 0.1,
+            },
+            pinch: {
+              enabled: true,
+            },
+            mode: "xy",
+            drag: {
+              enabled: true,
+              backgroundColor: "rgba(255,119,55,0.3)",
+              borderColor: "rgb(255,119,55)",
+            },
+          },
+          limits: {
+            x: {
+              min: "original",
+              max: "original",
+            },
+          },
+        },
         legend: {
           labels: {
             color: "white",
-            font: {
-              size: 12,
-            },
+            font: { size: 12 },
           },
         },
         tooltip: {
@@ -161,6 +217,13 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
           padding: 10,
           displayColors: false,
           callbacks: {
+            title: function (tooltipItems) {
+              const value = Number(tooltipItems[0].label);
+              if (isLongDuration) {
+                return `Time: ${value} hours`;
+              }
+              return `Time: ${value} minutes`;
+            },
             label: function (context) {
               return `${context.dataset.label}: ${context.parsed.y}`;
             },
@@ -183,8 +246,24 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
   }, [data, label, dataKey]);
 
   return (
-    <div className="min-w-[600px] h-[300px] sm:h-[400px]">
-      <canvas ref={chartRef} />
+    <div className="space-y-4">
+      <div className="min-w-[600px] h-[300px] sm:h-[400px]">
+        <canvas ref={chartRef} />
+      </div>
+      <div className="flex justify-center space-x-4">
+        <button
+          onClick={resetZoom}
+          className="px-4 py-2 bg-[#FF7737] text-white rounded hover:bg-[#FF9966] transition-colors"
+        >
+          Reset View
+        </button>
+      </div>
+      <div className="text-center text-white/60 text-sm">
+        Last reading recorded:{" "}
+        {data.length > 0
+          ? new Date(data[0].created_at).toLocaleString()
+          : "No readings available"}
+      </div>
     </div>
   );
 };
