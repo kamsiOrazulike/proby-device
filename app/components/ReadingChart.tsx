@@ -14,7 +14,7 @@ import {
   ChartOptions,
 } from "chart.js";
 import zoomPlugin from "chartjs-plugin-zoom";
-import { ChartProps } from "../../types";
+import { ChartProps } from "../types";
 
 ChartJS.register(
   CategoryScale,

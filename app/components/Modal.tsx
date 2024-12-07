@@ -1,5 +1,5 @@
 "use client";
-import { ConfirmModalProps } from "../../types";
+import { ConfirmModalProps } from "../types";
 import React from "react";
 
 export const Modal = ({

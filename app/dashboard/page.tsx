@@ -2,10 +2,10 @@
 import { useEffect, useState, useRef } from "react";
 import { AiOutlinePoweroff, AiOutlineWifi } from "react-icons/ai";
 import { SensorReading } from "../types";
-import { Modal, ConfirmModal } from "./components/Modal";
-import ReadingCard from "./components/ReadingCard";
-import ReadingChart from "./components/ReadingChart";
-import Notification from "../dashboard/components/Notification";
+import { Modal, ConfirmModal } from "../components/Modal";
+import ReadingCard from "../components/ReadingCard";
+import ReadingChart from "../components/ReadingChart";
+import Notification from "../components/Notification";
 
 export default function Dashboard() {
   const [showConfirmModal, setShowConfirmModal] = useState(false);

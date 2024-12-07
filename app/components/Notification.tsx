@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { SensorReading } from "../../types";
+import { SensorReading } from "../types";
 
 interface Alert {
   id: string;

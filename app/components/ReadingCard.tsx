@@ -1,6 +1,6 @@
 "use client";
 import { AiOutlineLineChart } from "react-icons/ai";
-import { ReadingCardProps } from "../../types";
+import { ReadingCardProps } from "../types";
 
 const ReadingCard = ({
   title,
