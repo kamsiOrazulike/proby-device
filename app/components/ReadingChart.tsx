@@ -310,7 +310,7 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
           max: dataKey === "ph" ? 75 : undefined,
           title: {
             display: true,
-            text: "Time (minutes)",
+            text: "Time (hours)",
             color: "white",
             font: { size: 12 },
           },
