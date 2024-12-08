@@ -293,23 +293,32 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
   }, [data, label, dataKey]);
 
   return (
-    <div className="space-y-4">
-      <div className="min-w-[600px] h-[300px] sm:h-[400px]">
-        <canvas ref={chartRef} />
+    <div className="space-y-4 w-full">
+      {/* Scrollable container for the chart */}
+      <div className="relative w-full overflow-x-auto">
+        <div className="min-w-[600px] w-full">
+          <div className="h-[300px] sm:h-[400px]">
+            <canvas ref={chartRef} />
+          </div>
+        </div>
       </div>
-      <div className="flex justify-center space-x-4">
-        <button
-          onClick={resetZoom}
-          className="px-4 py-2 bg-[#FF7737] text-white rounded hover:bg-[#FF9966] transition-colors"
-        >
-          Reset View
-        </button>
-      </div>
-      <div className="text-center text-white/60 text-sm">
-        Last reading recorded:{" "}
-        {data.length > 0
-          ? new Date(data[0].created_at).toLocaleString()
-          : "No readings available"}
+
+      {/* Controls and info (outside scroll container) */}
+      <div className="w-full">
+        <div className="flex justify-center space-x-4">
+          <button
+            onClick={resetZoom}
+            className="px-4 py-2 bg-[#FF7737] text-white rounded hover:bg-[#FF9966] transition-colors"
+          >
+            Reset View
+          </button>
+        </div>
+        <div className="text-center text-white/60 text-sm mt-4">
+          Last reading recorded:{" "}
+          {data.length > 0
+            ? new Date(data[0].created_at).toLocaleString()
+            : "No readings available"}
+        </div>
       </div>
     </div>
   );
