@@ -1,25 +1,31 @@
 "use client";
 import { useEffect, useState } from "react";
 import {
-  AiOutlineArrowDown,
-  AiOutlineArrowUp,
+  AiOutlineHistory,
+  AiOutlineDelete,
   AiOutlineWifi,
 } from "react-icons/ai";
+import ReadingCard, { getThresholds, isOutsideThreshold } from "./ReadingCard";
 import { NotificationProps, SensorReading, Alert } from "../types";
 import SidePanel from "./SidePanel";
-import ReadingCard from "./ReadingCard";
 import ReadingChart from "./ReadingChart";
+import { ConfirmModal } from "./Modal";
 
 const Notification = ({
   data,
   isPaused,
   isConnected,
   onReconnect,
+  onClearData,
 }: NotificationProps) => {
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
   const [sidePanelOpen, setSidePanelOpen] = useState(false);
-  const [showChart, setShowChart] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showDataHistory, setShowDataHistory] = useState(false);
+  const [expandedCharts, setExpandedCharts] = useState<Record<string, boolean>>(
+    {}
+  );
 
   useEffect(() => {
     if (!data.length) {
@@ -105,6 +111,8 @@ const Notification = ({
         return "%";
       case "pressure":
         return "hPa";
+      case "voc_index":
+        return "ppm";
       default:
         return "";
     }
@@ -175,12 +183,67 @@ const Notification = ({
     }
   };
 
+  const toggleChart = (key: string) => {
+    setExpandedCharts((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
+
+  const handleClearData = () => {
+    setShowConfirmModal(true);
+  };
+
+  const handleConfirmClear = async () => {
+    await onClearData();
+    setShowConfirmModal(false);
+  };
+
+  const closeSidePanel = () => {
+    setSidePanelOpen(false);
+    setSelectedAlert(null);
+    setShowDataHistory(false);
+    setExpandedCharts({});
+  };
+
+  const handleShowDataHistory = () => {
+    setShowDataHistory(true);
+    setSidePanelOpen(true);
+    setSelectedAlert(null);
+  };
+
   return (
     <>
       <div className="p-4 space-y-2">
-        {/* Keep your existing alerts code */}
-        {getConnectionAlert()}
+        {/* Control Actions */}
+        <div className="mb-8">
+          <div className="flex flex-row w-full mb-2">
+            <div
+              className="w-full mr-1 bg-white/50 p-3 rounded-lg cursor-pointer hover:opacity-90 transition-opacity flex justify-between items-center"
+              onClick={handleShowDataHistory}
+            >
+              <div className="flex items-center gap-2 text-black">
+                <AiOutlineHistory className="w-4 h-4" />
+                <span>Data History</span>
+              </div>
+              <span className="text-sm text-black">→</span>
+            </div>
 
+            <div
+              className="w-auto ml-1 bg-red-500/20 p-3 rounded-lg cursor-pointer hover:opacity-90 transition-opacity flex justify-between items-center"
+              onClick={handleClearData}
+            >
+              <div className="flex items-center gap-2 text-red-500">
+                <AiOutlineDelete className="w-4 h-4" />
+              </div>
+            </div>
+          </div>
+
+          {/* Connection Status Alert */}
+          {getConnectionAlert()}
+        </div>
+
+        {/* Sensor Alerts */}
         {alerts.length === 0 ? (
           <div className="text-green-500 bg-[#02F199]/10 p-3 rounded-lg">
             <p>All readings are within normal range</p>
@@ -194,8 +257,8 @@ const Notification = ({
               )} flex justify-between items-center hover:opacity-90 transition-opacity`}
               onClick={() => {
                 setSelectedAlert(alert);
+                setShowDataHistory(false);
                 setSidePanelOpen(true);
-                setShowChart(false); // Reset chart visibility when opening new alert
               }}
             >
               <p>{alert.message}</p>
@@ -205,15 +268,8 @@ const Notification = ({
         )}
       </div>
 
-      <SidePanel
-        isOpen={sidePanelOpen}
-        onClose={() => {
-          setSidePanelOpen(false);
-          setSelectedAlert(null);
-          setShowChart(false);
-        }}
-      >
-        {selectedAlert && (
+      <SidePanel isOpen={sidePanelOpen} onClose={closeSidePanel}>
+        {selectedAlert ? (
           <div className="space-y-6">
             <div>
               <h2 className="text-2xl font-bold mb-4">
@@ -228,47 +284,87 @@ const Notification = ({
               </div>
             </div>
 
-            <div className="relative">
+            <div className="space-y-4">
               <ReadingCard
                 title={getSensorTitle(selectedAlert.sensorKey)}
                 subtitle={`Threshold: ${selectedAlert.threshold}`}
                 value={getReadingValue(selectedAlert.sensorKey)}
                 unit={getSensorUnit(selectedAlert.sensorKey)}
                 isLarge
-              />
-              <button
-                onClick={() => setShowChart(!showChart)}
-                className="absolute bottom-4 right-4 p-2 text-white/60 hover:text-white transition-colors flex items-center gap-2 text-sm"
+                showChart={expandedCharts[selectedAlert.sensorKey]}
+                onToggleChart={() => toggleChart(selectedAlert.sensorKey)}
               >
-                {showChart ? (
-                  <>
-                    Close History
-                    <AiOutlineArrowUp className="w-4 h-4" />
-                  </>
-                ) : (
-                  <>
-                    View History
-                    <AiOutlineArrowDown className="w-4 h-4" />
-                  </>
-                )}
-              </button>
-            </div>
-
-            {showChart && (
-              <div className="mt-4 space-y-4 animate-fadeIn ">
-                <h3 className="text-lg font-semibold">Historical Data</h3>
-                <div className="h-[300px]">
+                {expandedCharts[selectedAlert.sensorKey] && (
                   <ReadingChart
                     data={data}
                     label={getSensorTitle(selectedAlert.sensorKey)}
                     dataKey={selectedAlert.sensorKey}
                   />
-                </div>
-              </div>
-            )}
+                )}
+              </ReadingCard>
+            </div>
           </div>
-        )}
+        ) : showDataHistory ? (
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-2xl font-bold mb-4">All Sensor Data</h2>
+            </div>
+            <div className="space-y-4">
+              {[...Object.keys(data[0] || {})] // Create a new array to avoid mutating the original
+                .filter((key) => key !== "id" && key !== "created_at")
+                .map((key) => {
+                  const value = Number(
+                    getReadingValue(key as keyof SensorReading)
+                  );
+                  const title = getSensorTitle(key as keyof SensorReading);
+                  const thresholds = getThresholds(title);
+                  const isWarning = isOutsideThreshold(value, thresholds);
+
+                  return {
+                    key,
+                    value,
+                    title,
+                    isWarning,
+                  };
+                })
+                .sort((a, b) => {
+                  // Put warnings at the top
+                  if (a.isWarning && !b.isWarning) return -1;
+                  if (!a.isWarning && b.isWarning) return 1;
+                  return 0;
+                })
+                .map(({ key }) => (
+                  <div key={key} className="space-y-2">
+                    <ReadingCard
+                      title={getSensorTitle(key as keyof SensorReading)}
+                      subtitle="Current Reading"
+                      value={getReadingValue(key as keyof SensorReading)}
+                      unit={getSensorUnit(key as keyof SensorReading)}
+                      showChart={expandedCharts[key]}
+                      onToggleChart={() => toggleChart(key)}
+                    >
+                      {expandedCharts[key] && (
+                        <ReadingChart
+                          data={data}
+                          label={getSensorTitle(key as keyof SensorReading)}
+                          dataKey={key as keyof SensorReading}
+                        />
+                      )}
+                    </ReadingCard>
+                  </div>
+                ))}
+            </div>
+          </div>
+        ) : null}
       </SidePanel>
+
+      <ConfirmModal
+        isOpen={showConfirmModal}
+        onClose={() => setShowConfirmModal(false)}
+        onConfirm={handleConfirmClear}
+        title="Clear Historical Data"
+        message="Are you sure you want to clear all historical data? This action cannot be undone."
+      />
     </>
   );
 };

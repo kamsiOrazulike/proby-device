@@ -21,6 +21,7 @@ export interface NotificationProps {
   isPaused: boolean;
   isConnected: boolean;
   onReconnect: () => void;
+  onClearData: () => void;
 }
 
 export interface ConfirmModalProps {
@@ -37,7 +38,9 @@ export interface ReadingCardProps {
   value: string | number;
   unit: string;
   isLarge?: boolean;
-  onViewChart?: () => void;
+  showChart?: boolean;
+  onToggleChart?: () => void;
+  children?: React.ReactNode;
 }
 
 export interface ChartProps {

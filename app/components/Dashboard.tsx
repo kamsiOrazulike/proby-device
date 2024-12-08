@@ -1,12 +1,9 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
-import { AiOutlinePoweroff } from "react-icons/ai";
 import { SensorReading } from "../types";
-import { ConfirmModal } from "../components/Modal";
 import Notification from "../components/Notification";
 
 export default function Dashboard() {
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [data, setData] = useState<SensorReading[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isPaused, setIsPaused] = useState(false);
@@ -55,70 +52,32 @@ export default function Dashboard() {
     }
   }, [isPaused]);
 
-  const clearData = async () => {
-    try {
-      const response = await fetch("/api/readings", {
-        method: "DELETE",
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to clear data");
-      }
-
-      setData([]);
-    } catch (error) {
-      setError(error instanceof Error ? error.message : "Failed to clear data");
-      console.error("Clear data error:", error);
-    }
+  const handleReconnect = () => {
+    setIsPaused(false);
+    noChangeCount.current = 0;
+    uniqueIdsCount.current.clear();
+    setIsConnected(false);
   };
 
   return (
     <div className="bg-gradient-to-t from-[#5252AE] to-[#2C3192] text-white min-h-screen pt-24 md:pt-28 px-4 sm:px-8">
-      <main className="w-full max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <button
-            onClick={() => setShowConfirmModal(true)}
-            className="text-red-500 hover:text-red-400 transition-all duration-150"
-          >
-            <AiOutlinePoweroff className="w-8 h-8" />
-          </button>
-        </div>
+      <main className="w-full mx-auto">
+        <div className="w-full flex flex-col justify-center gap-4">
+          <div className="w-full h-[500px] bg-hero-model bg-center md:bg-left bg-contain bg-no-repeat" />
 
-        {/* Main Content */}
-        <div className="flex flex-col-reverse md:flex-row gap-8 items-start">
-          {/* Device Image */}
-          <div className="w-full md:w-1/2">
-            <div className="w-full h-[500px] bg-hero-model bg-center bg-contain bg-no-repeat rounded-lg" />
-          </div>
-
-          {/* Notifications */}
-          <div className="w-full md:w-1/2">
+          <div className="absolute w-full md:w-1/2 right-0">
             <Notification
               data={data}
               isPaused={isPaused}
               isConnected={isConnected}
-              onReconnect={() => {
-                setIsPaused(false);
-                noChangeCount.current = 0;
-                uniqueIdsCount.current.clear();
-                setIsConnected(false);
-              }}
+              onReconnect={handleReconnect}
+              onClearData={() => setData([])}
             />
           </div>
         </div>
 
-        {/* Modals and Errors */}
-        <ConfirmModal
-          isOpen={showConfirmModal}
-          onClose={() => setShowConfirmModal(false)}
-          onConfirm={clearData}
-          title="Clear Historical Data"
-          message="Are you sure you want to clear all historical data? This action cannot be undone."
-        />
-
         {error && (
-          <div className="mt-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
             Error: {error}
           </div>
         )}

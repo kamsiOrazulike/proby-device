@@ -38,6 +38,16 @@ type MockPhData = {
   id?: never;
 };
 
+type MockCO2Data = {
+  created_at: string;
+  voc_index: number;
+  temperature?: never;
+  humidity?: never;
+  pressure?: never;
+  ph?: never;
+  id?: never;
+};
+
 const getScaleConfig = (dataKey: string) => {
   const defaultScale = {
     min: undefined,
@@ -63,7 +73,7 @@ const getScaleConfig = (dataKey: string) => {
     case "voc_index":
       return {
         min: 0,
-        max: 500,
+        max: 4.5,
       };
     case "ph":
       return {
@@ -72,6 +82,23 @@ const getScaleConfig = (dataKey: string) => {
       };
     default:
       return defaultScale;
+  }
+};
+
+const getAxisLabel = (dataKey: string): string => {
+  switch (dataKey) {
+    case "temperature":
+      return "Temperature (°C)";
+    case "humidity":
+      return "Humidity (%)";
+    case "pressure":
+      return "Pressure (hPa)";
+    case "voc_index":
+      return "CO₂ Production Rate (10⁻⁹ mL/cell)";
+    case "ph":
+      return "pH Level";
+    default:
+      return "Value";
   }
 };
 
@@ -139,6 +166,72 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
     ];
     return mockData;
   };
+  const getMockCO2Data = (): MockCO2Data[] => {
+    const baseTime = new Date(2024, 0, 1, 0, 0, 0);
+    const mockData: MockCO2Data[] = [
+      {
+        created_at: new Date(baseTime.getTime() + 0 * 60000).toISOString(),
+        voc_index: 0,
+      },
+      {
+        created_at: new Date(baseTime.getTime() + 5 * 60000).toISOString(),
+        voc_index: 0,
+      },
+      {
+        created_at: new Date(baseTime.getTime() + 10 * 60000).toISOString(),
+        voc_index: 0.1,
+      },
+      {
+        created_at: new Date(baseTime.getTime() + 15 * 60000).toISOString(),
+        voc_index: 0.2,
+      },
+      {
+        created_at: new Date(baseTime.getTime() + 20 * 60000).toISOString(),
+        voc_index: 0.5,
+      },
+      {
+        created_at: new Date(baseTime.getTime() + 25 * 60000).toISOString(),
+        voc_index: 1.0,
+      },
+      {
+        created_at: new Date(baseTime.getTime() + 30 * 60000).toISOString(),
+        voc_index: 1.5,
+      },
+      {
+        created_at: new Date(baseTime.getTime() + 35 * 60000).toISOString(),
+        voc_index: 2.0,
+      },
+      {
+        created_at: new Date(baseTime.getTime() + 40 * 60000).toISOString(),
+        voc_index: 2.3,
+      },
+      {
+        created_at: new Date(baseTime.getTime() + 45 * 60000).toISOString(),
+        voc_index: 2.6,
+      },
+      {
+        created_at: new Date(baseTime.getTime() + 50 * 60000).toISOString(),
+        voc_index: 2.8,
+      },
+      {
+        created_at: new Date(baseTime.getTime() + 55 * 60000).toISOString(),
+        voc_index: 3.0,
+      },
+      {
+        created_at: new Date(baseTime.getTime() + 60 * 60000).toISOString(),
+        voc_index: 3.1,
+      },
+      {
+        created_at: new Date(baseTime.getTime() + 65 * 60000).toISOString(),
+        voc_index: 3.2,
+      },
+      {
+        created_at: new Date(baseTime.getTime() + 70 * 60000).toISOString(),
+        voc_index: 3.3,
+      },
+    ];
+    return mockData;
+  };
 
   useEffect(() => {
     if (!chartRef.current || !data.length) return;
@@ -150,7 +243,12 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
     const ctx = chartRef.current.getContext("2d");
     if (!ctx) return;
 
-    const sourceData = dataKey === "ph" ? getMockPhData() : data;
+    const sourceData =
+      dataKey === "ph"
+        ? getMockPhData()
+        : dataKey === "voc_index"
+        ? getMockCO2Data()
+        : data;
     const sortedData = [...sourceData].sort(
       (a, b) =>
         new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
@@ -193,7 +291,7 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
           beginAtZero: false,
           title: {
             display: true,
-            text: dataKey === "ph" ? "pH Level" : "Value",
+            text: getAxisLabel(dataKey),
             color: "white",
             font: { size: 12 },
           },
@@ -293,16 +391,14 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
   }, [data, label, dataKey]);
 
   return (
-    <div className="space-y-4 w-full">
-      {/* Adding visual indicators and ensuring scrollbar visibility on mobile */}
+    <div className="w-full bg-opacity-50 rounded-lg p-4">
       <div className="relative w-full">
-        {/* Scroll indicator arrows */}
         <div className="md:hidden text-[#FF7737] text-sm text-center mb-2">
           ← Scroll to see more →
         </div>
 
         <div
-          className="relative w-full py-8 overflow-x-auto 
+          className="relative w-full py-4 overflow-x-auto 
           overflow-y-hidden
           touch-pan-x
           overscroll-x-contain
@@ -310,37 +406,30 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
           [&::-webkit-scrollbar]:h-2
           [&::-webkit-scrollbar-track]:bg-gray-800
           [&::-webkit-scrollbar-thumb]:bg-[#FF7737]
-          [&::-webkit-scrollbar-thumb:hover]:bg-[#FF9966]
-          [-webkit-overflow-scrolling:touch]
-          before:absolute
-          before:inset-x-0
-          before:bottom-0
-          before:h-0.5
-          before:bg-[#FF7737]/20"
+          [&::-webkit-scrollbar-thumb:hover]:bg-[#FF9966]"
         >
-          <div className="min-w-[600px] w-full pb-2">
-            <div className="h-[300px] sm:h-[400px]">
+          <div className="min-w-[600px] w-full">
+            <div className="h-[250px] sm:h-[300px]">
               <canvas ref={chartRef} />
             </div>
           </div>
         </div>
       </div>
 
-      {/* Controls and info (outside scroll container) */}
-      <div className="w-full">
-        <div className="flex justify-center space-x-4">
+      <div className="w-full mt-4">
+        <div className="flex justify-center">
           <button
             onClick={resetZoom}
-            className="px-4 py-2 bg-[#FF7737] mt-8 text-white rounded hover:bg-[#FF9966] transition-colors"
+            className="px-4 py-2 bg-[#FF7737] text-white rounded hover:bg-[#FF9966] transition-colors"
           >
             Reset View
           </button>
         </div>
-        <div className="text-center text-white/60 text-sm py-4">
-          Last reading recorded:{" "}
+        <div className="text-center text-white/60 text-sm py-2">
+          Last reading:{" "}
           {data.length > 0
             ? new Date(data[0].created_at).toLocaleString()
-            : "No readings available"}
+            : "No data"}
         </div>
       </div>
     </div>
