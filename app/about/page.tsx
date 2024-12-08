@@ -9,7 +9,7 @@ export const revalidate = 0;
 
 const About = () => {
   return (
-    <div className="flex flex-col w-full bg-[#36357F] pt-24 md:pt-44">
+    <div className="flex flex-col w-full bg-gradient-to-t from-[#5252AE] to-[#2C3192] pt-24 md:pt-44">
       {/* Section 1 */}
       <div className="flex flex-col md:flex-row items-end md:space-x-12 px-8 mb-8 border-b border-white/20 pb-8">
         {/* Left Column */}

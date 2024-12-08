@@ -8,6 +8,21 @@ export interface SensorReading {
   voc_index: string;
 }
 
+export interface Alert {
+  id: string;
+  message: string;
+  type: "info" | "warning" | "error";
+  sensorKey: keyof SensorReading;
+  threshold: string;
+}
+
+export interface NotificationProps {
+  data: SensorReading[];
+  isPaused: boolean;
+  isConnected: boolean;
+  onReconnect: () => void;
+}
+
 export interface ConfirmModalProps {
   isOpen: boolean;
   onClose: () => void;
