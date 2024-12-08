@@ -302,7 +302,7 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
         </div>
 
         <div
-          className="relative w-full overflow-x-auto 
+          className="relative w-full py-8 overflow-x-auto 
           overflow-y-hidden
           touch-pan-x
           overscroll-x-contain
@@ -331,12 +331,12 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
         <div className="flex justify-center space-x-4">
           <button
             onClick={resetZoom}
-            className="px-4 py-2 bg-[#FF7737] text-white rounded hover:bg-[#FF9966] transition-colors"
+            className="px-4 py-2 bg-[#FF7737] mt-8 text-white rounded hover:bg-[#FF9966] transition-colors"
           >
             Reset View
           </button>
         </div>
-        <div className="text-center text-white/60 text-sm mt-4">
+        <div className="text-center text-white/60 text-sm py-4">
           Last reading recorded:{" "}
           {data.length > 0
             ? new Date(data[0].created_at).toLocaleString()
