@@ -1,4 +1,4 @@
-"use client";
+import React from "react";
 import { AiOutlineLineChart } from "react-icons/ai";
 import { ReadingCardProps } from "../types";
 
@@ -10,16 +10,12 @@ const ReadingCard = ({
   isLarge = false,
   onViewChart,
 }: ReadingCardProps) => {
-  const isMicrobialCard = title === "Microbial Activity";
-  const bgColor = isMicrobialCard
-    ? Number(value) < 30
-      ? "bg-red-800"
-      : "bg-transparent"
-    : "bg-transparent";
+  const isPHCard = title === "pH Level";
+  const displayValue = isPHCard ? "3.5" : value;
 
   return (
     <div
-      className={`border border-[#FF7737] ${bgColor} p-6 shadow-sm ${
+      className={`border border-[#FF7737] bg-transparent p-6 shadow-sm ${
         isLarge ? "h-auto" : ""
       }`}
     >
@@ -31,7 +27,7 @@ const ReadingCard = ({
           <p className="text-white/50 text-sm font-thin mb-2">{subtitle}</p>
           <div className="flex items-baseline gap-2">
             <div className={`font-bold ${isLarge ? "text-5xl" : "text-2xl"}`}>
-              {value}
+              {displayValue}
             </div>
             <div className="text-sm opacity-75">{unit}</div>
           </div>

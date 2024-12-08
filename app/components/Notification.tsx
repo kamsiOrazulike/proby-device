@@ -39,13 +39,13 @@ const Notification = ({
     const newAlerts: Alert[] = [];
 
     // Check temperature
-    if (latestReading.temperature && Number(latestReading.temperature) > 20) {
+    if (latestReading.temperature && Number(latestReading.temperature) > 25) {
       newAlerts.push({
         id: "temperature",
         message: "Temperature is above optimal range",
         type: "warning",
         sensorKey: "temperature",
-        threshold: "20°C",
+        threshold: "25°C",
       });
     }
 
@@ -74,14 +74,14 @@ const Notification = ({
     // Check pH
     if (
       latestReading.ph &&
-      (Number(latestReading.ph) < 2 || Number(latestReading.ph) > 5)
+      (Number(latestReading.ph) < 6 || Number(latestReading.ph) > 7)
     ) {
       newAlerts.push({
         id: "ph",
         message: "pH levels outside optimal range",
         type: "warning",
         sensorKey: "ph",
-        threshold: "2-5",
+        threshold: "4-7",
       });
     }
 
@@ -199,7 +199,7 @@ const Notification = ({
               }}
             >
               <p>{alert.message}</p>
-              <span className="text-sm">View details →</span>
+              <span className="text-sm">View →</span>
             </div>
           ))
         )}
@@ -242,7 +242,7 @@ const Notification = ({
               >
                 {showChart ? (
                   <>
-                    CLose History
+                    Close History
                     <AiOutlineArrowUp className="w-4 h-4" />
                   </>
                 ) : (
@@ -255,7 +255,7 @@ const Notification = ({
             </div>
 
             {showChart && (
-              <div className="mt-4 space-y-4 animate-fadeIn">
+              <div className="mt-4 space-y-4 animate-fadeIn ">
                 <h3 className="text-lg font-semibold">Historical Data</h3>
                 <div className="h-[300px]">
                   <ReadingChart

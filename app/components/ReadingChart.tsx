@@ -85,21 +85,57 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
     }
   };
 
-  // Mock pH data function
   const getMockPhData = (): MockPhData[] => {
+    const baseTime = new Date(2024, 0, 1, 0, 0, 0);
     const mockData: MockPhData[] = [
-      { created_at: new Date(2024, 0, 1, 0, 2).toISOString(), ph: 6.8 },
-      { created_at: new Date(2024, 0, 1, 0, 4).toISOString(), ph: 6.5 },
-      { created_at: new Date(2024, 0, 1, 0, 12).toISOString(), ph: 6.6 },
-      { created_at: new Date(2024, 0, 1, 0, 14).toISOString(), ph: 6.9 },
-      { created_at: new Date(2024, 0, 1, 0, 24).toISOString(), ph: 4.7 },
-      { created_at: new Date(2024, 0, 1, 0, 26).toISOString(), ph: 4.4 },
-      { created_at: new Date(2024, 0, 1, 0, 48).toISOString(), ph: 3.7 },
-      { created_at: new Date(2024, 0, 1, 0, 50).toISOString(), ph: 3.6 },
-      { created_at: new Date(2024, 0, 1, 0, 60).toISOString(), ph: 3.6 },
-      { created_at: new Date(2024, 0, 1, 0, 62).toISOString(), ph: 3.6 },
-      { created_at: new Date(2024, 0, 1, 0, 72).toISOString(), ph: 3.6 },
-      { created_at: new Date(2024, 0, 1, 0, 74).toISOString(), ph: 3.6 },
+      {
+        created_at: new Date(baseTime.getTime() + 2 * 60000).toISOString(),
+        ph: 6.8,
+      },
+      {
+        created_at: new Date(baseTime.getTime() + 4 * 60000).toISOString(),
+        ph: 6.5,
+      },
+      {
+        created_at: new Date(baseTime.getTime() + 12 * 60000).toISOString(),
+        ph: 6.6,
+      },
+      {
+        created_at: new Date(baseTime.getTime() + 14 * 60000).toISOString(),
+        ph: 6.9,
+      },
+      {
+        created_at: new Date(baseTime.getTime() + 24 * 60000).toISOString(),
+        ph: 4.7,
+      },
+      {
+        created_at: new Date(baseTime.getTime() + 26 * 60000).toISOString(),
+        ph: 4.4,
+      },
+      {
+        created_at: new Date(baseTime.getTime() + 48 * 60000).toISOString(),
+        ph: 3.7,
+      },
+      {
+        created_at: new Date(baseTime.getTime() + 50 * 60000).toISOString(),
+        ph: 3.6,
+      },
+      {
+        created_at: new Date(baseTime.getTime() + 60 * 60000).toISOString(),
+        ph: 3.6,
+      },
+      {
+        created_at: new Date(baseTime.getTime() + 62 * 60000).toISOString(),
+        ph: 3.6,
+      },
+      {
+        created_at: new Date(baseTime.getTime() + 72 * 60000).toISOString(),
+        ph: 3.6,
+      },
+      {
+        created_at: new Date(baseTime.getTime() + 74 * 60000).toISOString(),
+        ph: 3.6,
+      },
     ];
     return mockData;
   };
@@ -114,40 +150,27 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
     const ctx = chartRef.current.getContext("2d");
     if (!ctx) return;
 
-    // Use mock data for pH, real data for others
     const sourceData = dataKey === "ph" ? getMockPhData() : data;
     const sortedData = [...sourceData].sort(
       (a, b) =>
         new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
     );
 
-    // Calculate time elapsed
     const startTime = new Date(sortedData[0].created_at).getTime();
-    const endTime = new Date(
-      sortedData[sortedData.length - 1].created_at
-    ).getTime();
-    const totalMinutesElapsed = (endTime - startTime) / 60000;
-    const isLongDuration = totalMinutesElapsed >= 360; // 6 hours or more
 
-    const getTimeElapsed = (timestamp: string) => {
+    const getTimeElapsed = (timestamp: string): number => {
       const elapsed = new Date(timestamp).getTime() - startTime;
-      // For pH mock data, always show in minutes
-      if (dataKey === "ph") {
-        return Math.round(elapsed / 60000).toString();
-      }
-      // Original time formatting for other data
-      if (isLongDuration) {
-        return (elapsed / 3600000).toFixed(1); // Convert to hours
-      }
-      return (elapsed / 60000).toFixed(1); // Keep as minutes
+      return Math.round(elapsed / 60000);
     };
 
-    const formattedChartData: ChartData<"line"> = {
-      labels: sortedData.map((d) => getTimeElapsed(d.created_at)),
+    const formattedChartData: ChartData<"line", { x: number; y: number }[]> = {
       datasets: [
         {
           label,
-          data: sortedData.map((d) => Number(d[dataKey])),
+          data: sortedData.map((d) => ({
+            x: getTimeElapsed(d.created_at),
+            y: Number(d[dataKey]),
+          })),
           backgroundColor: "#FF7737",
           borderColor: "#FF7737",
           tension: 0.1,
@@ -184,26 +207,20 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
           },
         },
         x: {
+          type: "linear",
           min: 0,
-          max:
-            dataKey === "ph"
-              ? 75
-              : isLongDuration
-              ? Math.ceil(totalMinutesElapsed / 60)
-              : Math.ceil(totalMinutesElapsed),
+          max: dataKey === "ph" ? 75 : undefined,
           title: {
             display: true,
-            text: "Time Elapsed (minutes)",
+            text: "Time (minutes)",
             color: "white",
             font: { size: 12 },
           },
           ticks: {
             color: "white",
             font: { size: 11 },
-            stepSize: dataKey === "ph" ? 12 : isLongDuration ? 6 : 1,
-            callback: function (value) {
-              return value.toString();
-            },
+            stepSize: dataKey === "ph" ? 12 : undefined,
+            callback: (value) => Math.round(Number(value)).toString(),
           },
           grid: {
             color: "rgba(255, 255, 255, 0.1)",
@@ -254,13 +271,9 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
           padding: 10,
           displayColors: false,
           callbacks: {
-            title: function (tooltipItems) {
-              const value = Number(tooltipItems[0].label);
-              return `Time: ${value} minutes`;
-            },
-            label: function (context) {
-              return `${context.dataset.label}: ${context.parsed.y}`;
-            },
+            title: (tooltipItems) =>
+              `Time: ${Math.round(tooltipItems[0].parsed.x)} minutes`,
+            label: (context) => `${context.dataset.label}: ${context.parsed.y}`,
           },
         },
       },
