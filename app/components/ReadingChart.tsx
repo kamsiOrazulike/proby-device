@@ -295,8 +295,17 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
   return (
     <div className="space-y-4 w-full">
       {/* Scrollable container for the chart */}
-      <div className="relative w-full overflow-x-scroll md:overflow-x-auto">
-        <div className="min-w-[600px] w-full">
+      <div
+        className="relative w-full overflow-x-auto 
+        scrollbar-thin scrollbar-track-gray-800 scrollbar-thumb-[#FF7737]
+        hover:scrollbar-thumb-[#FF9966] cursor-grab active:cursor-grabbing
+        [&::-webkit-scrollbar]:h-2
+        [&::-webkit-scrollbar-track]:bg-gray-800
+        [&::-webkit-scrollbar-thumb]:bg-[#FF7737]
+        [&::-webkit-scrollbar-thumb:hover]:bg-[#FF9966]"
+      >
+        <div className="min-w-[600px] w-full pb-2">
+          {/* Added padding to prevent scrollbar overlap */}
           <div className="h-[300px] sm:h-[400px]">
             <canvas ref={chartRef} />
           </div>
