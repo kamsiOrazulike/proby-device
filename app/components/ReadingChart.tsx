@@ -294,20 +294,34 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
 
   return (
     <div className="space-y-4 w-full">
-      {/* Scrollable container for the chart */}
-      <div
-        className="relative w-full overflow-x-auto 
-        scrollbar-thin scrollbar-track-gray-800 scrollbar-thumb-[#FF7737]
-        hover:scrollbar-thumb-[#FF9966] cursor-grab active:cursor-grabbing
-        [&::-webkit-scrollbar]:h-2
-        [&::-webkit-scrollbar-track]:bg-gray-800
-        [&::-webkit-scrollbar-thumb]:bg-[#FF7737]
-        [&::-webkit-scrollbar-thumb:hover]:bg-[#FF9966]"
-      >
-        <div className="min-w-[600px] w-full pb-2">
-          {/* Added padding to prevent scrollbar overlap */}
-          <div className="h-[300px] sm:h-[400px]">
-            <canvas ref={chartRef} />
+      {/* Adding visual indicators and ensuring scrollbar visibility on mobile */}
+      <div className="relative w-full">
+        {/* Scroll indicator arrows */}
+        <div className="md:hidden text-[#FF7737] text-sm text-center mb-2">
+          ← Scroll to see more →
+        </div>
+
+        <div
+          className="relative w-full overflow-x-auto 
+          overflow-y-hidden
+          touch-pan-x
+          overscroll-x-contain
+          [&::-webkit-scrollbar]:block
+          [&::-webkit-scrollbar]:h-2
+          [&::-webkit-scrollbar-track]:bg-gray-800
+          [&::-webkit-scrollbar-thumb]:bg-[#FF7737]
+          [&::-webkit-scrollbar-thumb:hover]:bg-[#FF9966]
+          [-webkit-overflow-scrolling:touch]
+          before:absolute
+          before:inset-x-0
+          before:bottom-0
+          before:h-0.5
+          before:bg-[#FF7737]/20"
+        >
+          <div className="min-w-[600px] w-full pb-2">
+            <div className="h-[300px] sm:h-[400px]">
+              <canvas ref={chartRef} />
+            </div>
           </div>
         </div>
       </div>
