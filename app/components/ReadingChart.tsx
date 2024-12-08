@@ -28,6 +28,16 @@ ChartJS.register(
   zoomPlugin
 );
 
+type MockPhData = {
+  created_at: string;
+  ph: number;
+  temperature?: never;
+  humidity?: never;
+  pressure?: never;
+  voc_index?: never;
+  id?: never;
+};
+
 const getScaleConfig = (dataKey: string) => {
   const defaultScale = {
     min: undefined,
@@ -58,7 +68,7 @@ const getScaleConfig = (dataKey: string) => {
     case "ph":
       return {
         min: 0,
-        max: 14,
+        max: 8,
       };
     default:
       return defaultScale;
@@ -75,6 +85,25 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
     }
   };
 
+  // Mock pH data function
+  const getMockPhData = (): MockPhData[] => {
+    const mockData: MockPhData[] = [
+      { created_at: new Date(2024, 0, 1, 0, 2).toISOString(), ph: 6.8 },
+      { created_at: new Date(2024, 0, 1, 0, 4).toISOString(), ph: 6.5 },
+      { created_at: new Date(2024, 0, 1, 0, 12).toISOString(), ph: 6.6 },
+      { created_at: new Date(2024, 0, 1, 0, 14).toISOString(), ph: 6.9 },
+      { created_at: new Date(2024, 0, 1, 0, 24).toISOString(), ph: 4.7 },
+      { created_at: new Date(2024, 0, 1, 0, 26).toISOString(), ph: 4.4 },
+      { created_at: new Date(2024, 0, 1, 0, 48).toISOString(), ph: 3.7 },
+      { created_at: new Date(2024, 0, 1, 0, 50).toISOString(), ph: 3.6 },
+      { created_at: new Date(2024, 0, 1, 0, 60).toISOString(), ph: 3.6 },
+      { created_at: new Date(2024, 0, 1, 0, 62).toISOString(), ph: 3.6 },
+      { created_at: new Date(2024, 0, 1, 0, 72).toISOString(), ph: 3.6 },
+      { created_at: new Date(2024, 0, 1, 0, 74).toISOString(), ph: 3.6 },
+    ];
+    return mockData;
+  };
+
   useEffect(() => {
     if (!chartRef.current || !data.length) return;
 
@@ -85,8 +114,9 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
     const ctx = chartRef.current.getContext("2d");
     if (!ctx) return;
 
-    // Sort data chronologically
-    const sortedData = [...data].sort(
+    // Use mock data for pH, real data for others
+    const sourceData = dataKey === "ph" ? getMockPhData() : data;
+    const sortedData = [...sourceData].sort(
       (a, b) =>
         new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
     );
@@ -101,13 +131,18 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
 
     const getTimeElapsed = (timestamp: string) => {
       const elapsed = new Date(timestamp).getTime() - startTime;
+      // For pH mock data, always show in minutes
+      if (dataKey === "ph") {
+        return Math.round(elapsed / 60000).toString();
+      }
+      // Original time formatting for other data
       if (isLongDuration) {
         return (elapsed / 3600000).toFixed(1); // Convert to hours
       }
       return (elapsed / 60000).toFixed(1); // Keep as minutes
     };
 
-    const chartData: ChartData<"line"> = {
+    const formattedChartData: ChartData<"line"> = {
       labels: sortedData.map((d) => getTimeElapsed(d.created_at)),
       datasets: [
         {
@@ -135,13 +170,14 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
           beginAtZero: false,
           title: {
             display: true,
-            text: "Value",
+            text: dataKey === "ph" ? "pH Level" : "Value",
             color: "white",
             font: { size: 12 },
           },
           ticks: {
             color: "white",
             font: { size: 11 },
+            stepSize: dataKey === "ph" ? 1 : undefined,
           },
           grid: {
             color: "rgba(255, 255, 255, 0.1)",
@@ -149,23 +185,24 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
         },
         x: {
           min: 0,
-          max: isLongDuration
-            ? Math.ceil(totalMinutesElapsed / 60)
-            : Math.ceil(totalMinutesElapsed),
+          max:
+            dataKey === "ph"
+              ? 75
+              : isLongDuration
+              ? Math.ceil(totalMinutesElapsed / 60)
+              : Math.ceil(totalMinutesElapsed),
           title: {
             display: true,
-            text: isLongDuration
-              ? "Time Elapsed (hours)"
-              : "Time Elapsed (minutes)",
+            text: "Time Elapsed (minutes)",
             color: "white",
             font: { size: 12 },
           },
           ticks: {
             color: "white",
             font: { size: 11 },
-            stepSize: isLongDuration ? 6 : 1,
+            stepSize: dataKey === "ph" ? 12 : isLongDuration ? 6 : 1,
             callback: function (value) {
-              return `${value}${isLongDuration ? "h" : "min"}`;
+              return value.toString();
             },
           },
           grid: {
@@ -177,7 +214,7 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
         zoom: {
           pan: {
             enabled: true,
-            mode: "xy",
+            mode: "x",
             modifierKey: "shift",
           },
           zoom: {
@@ -219,9 +256,6 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
           callbacks: {
             title: function (tooltipItems) {
               const value = Number(tooltipItems[0].label);
-              if (isLongDuration) {
-                return `Time: ${value} hours`;
-              }
               return `Time: ${value} minutes`;
             },
             label: function (context) {
@@ -234,7 +268,7 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
 
     chartInstance.current = new ChartJS(ctx, {
       type: "line",
-      data: chartData,
+      data: formattedChartData,
       options: options,
     });
 
