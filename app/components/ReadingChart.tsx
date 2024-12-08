@@ -295,7 +295,7 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
   return (
     <div className="space-y-4 w-full">
       {/* Scrollable container for the chart */}
-      <div className="relative w-full overflow-x-auto">
+      <div className="relative w-full overflow-x-scroll md:overflow-x-auto">
         <div className="min-w-[600px] w-full">
           <div className="h-[300px] sm:h-[400px]">
             <canvas ref={chartRef} />
