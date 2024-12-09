@@ -13,7 +13,7 @@ export const getThresholds = (sensorType: string): ThresholdConfig => {
   switch (sensorType) {
     case "Temperature":
       return {
-        warning: { min: 18, max: 25 },
+        warning: { min: 18, max: 27 },
       };
     case "Humidity":
       return {
