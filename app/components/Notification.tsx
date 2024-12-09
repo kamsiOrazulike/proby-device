@@ -81,14 +81,14 @@ const Notification = ({
     // Check pH
     if (
       latestReading.ph &&
-      (Number(latestReading.ph) < 6 || Number(latestReading.ph) > 7)
+      (Number(latestReading.ph) < 3 || Number(latestReading.ph) > 5)
     ) {
       newAlerts.push({
         id: "ph",
         message: "pH levels outside optimal range",
         type: "warning",
         sensorKey: "ph",
-        threshold: "4-7",
+        threshold: "3-5",
       });
     }
 
