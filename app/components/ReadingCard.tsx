@@ -25,7 +25,7 @@ export const getThresholds = (sensorType: string): ThresholdConfig => {
       };
     case "pH Level":
       return {
-        warning: { min: 4, max: 7 },
+        warning: { min: 3, max: 5 },
       };
     case "Pressure":
       return {
