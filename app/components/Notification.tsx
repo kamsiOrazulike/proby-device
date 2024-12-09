@@ -46,7 +46,7 @@ const Notification = ({
     const newAlerts: Alert[] = [];
 
     // Check temperature
-    if (latestReading.temperature && Number(latestReading.temperature) > 25) {
+    if (latestReading.temperature && Number(latestReading.temperature) > 28) {
       newAlerts.push({
         id: "temperature",
         message: "Temperature is above optimal range",
