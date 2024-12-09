@@ -79,7 +79,7 @@ const getAxisLabel = (dataKey: string): string => {
     case "pressure":
       return "Pressure (hPa)";
     case "voc_index":
-      return "CO₂ Production Rate (10⁻⁹ mL/cell)";
+      return "CO₂ Production Rate (ppm/min)";
     case "ph":
       return "pH Level";
     default:
@@ -303,7 +303,7 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
             display: true,
             text:
               dataKey === "ph" || dataKey === "voc_index"
-                ? "Time (minutes)"
+                ? "Time (hours)"
                 : "Time (hours)",
             color: "white",
             font: { size: 12 },
@@ -364,7 +364,7 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
               const timeValue = Math.round(tooltipItems[0].parsed.x);
               const timeUnit =
                 dataKey === "ph" || dataKey === "voc_index"
-                  ? "minutes"
+                  ? "hours"
                   : "hours";
               return `Time: ${timeValue} ${timeUnit}`;
             },

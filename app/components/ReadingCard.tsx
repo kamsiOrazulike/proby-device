@@ -64,7 +64,7 @@ const ReadingCard = ({
 
   const displayValue = isPHCard ? "3.5" : isCO2Card ? "3.2" : value;
 
-  const displayUnit = isCO2Card ? "10⁻⁹ mL/cell" : unit;
+  const displayUnit = isCO2Card ? "ppm/min" : unit;
 
   const numericValue = Number(displayValue);
   const thresholds = getThresholds(title);
