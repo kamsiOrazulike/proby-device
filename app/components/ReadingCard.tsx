@@ -105,7 +105,7 @@ const ReadingCard = ({
   return (
     <div className="w-full space-y-4">
       <div className={cardStyles}>
-        <div className="flex justify-between items-center">
+        <div className="flex justify-start md:justify-between items-center">
           <div className="flex flex-col">
             <h3
               className={`font-bold ${isLarge ? "text-3xl" : "text-md"} mb-1`}

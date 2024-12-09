@@ -10,6 +10,7 @@ import { NotificationProps, SensorReading, Alert } from "../types";
 import SidePanel from "./SidePanel";
 import ReadingChart from "./ReadingChart";
 import { ConfirmModal } from "./Modal";
+import { MdSignalWifiStatusbarConnectedNoInternet } from "react-icons/md";
 
 const Notification = ({
   data,
@@ -138,14 +139,12 @@ const Notification = ({
   const getConnectionAlert = () => {
     if (isPaused) {
       return (
-        <div className="bg-red-500/20 p-3 rounded-lg flex justify-between items-center">
-          <span className="text-red-500">Device not found</span>
+        <div className="bg-red-500/20 p-3 mr-2 rounded-lg flex justify-between items-center">
           <button
             onClick={onReconnect}
             className="text-red-500 hover:text-red-400 transition-colors text-sm flex items-center gap-2"
           >
-            <AiOutlineWifi className="w-4 h-4" />
-            Reconnect
+            <MdSignalWifiStatusbarConnectedNoInternet className="w-4" />
           </button>
         </div>
       );
@@ -153,20 +152,18 @@ const Notification = ({
 
     if (isConnected) {
       return (
-        <div className="bg-green-500/20 p-3 rounded-lg">
-          <span className="text-green-500 flex items-center gap-2">
-            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-            Connected
+        <div className="bg-green-500/20 p-3 mr-2 rounded-lg flex justify-between items-center">
+          <span className="text-green-500 flex items-center animate-pulse gap-2">
+            <AiOutlineWifi className="w-4" />
           </span>
         </div>
       );
     }
 
     return (
-      <div className="bg-yellow-500/20 p-3 rounded-lg">
-        <span className="text-yellow-500 flex items-center gap-2">
-          <span className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse" />
-          Searching for device...
+      <div className="bg-yellow-500/20 p-3 mr-2 rounded-lg flex justify-between items-center">
+        <span className="text-yellow-500 flex items-center animate-pulse gap-2">
+          <AiOutlineWifi className="w-4 animate-pulse" />
         </span>
       </div>
     );
@@ -218,13 +215,15 @@ const Notification = ({
         {/* Control Actions */}
         <div className="mb-8">
           <div className="flex flex-row w-full mb-2">
+            {/* Connection Status Alert */}
+            {getConnectionAlert()}
             <div
               className="w-full mr-1 bg-white/50 p-3 rounded-lg cursor-pointer hover:opacity-90 transition-opacity flex justify-between items-center"
               onClick={handleShowDataHistory}
             >
               <div className="flex items-center gap-2 text-black">
                 <AiOutlineHistory className="w-4 h-4" />
-                <span>Data History</span>
+                <span>All Data </span>
               </div>
               <span className="text-sm text-black">→</span>
             </div>
@@ -238,9 +237,6 @@ const Notification = ({
               </div>
             </div>
           </div>
-
-          {/* Connection Status Alert */}
-          {getConnectionAlert()}
         </div>
 
         {/* Sensor Alerts */}
