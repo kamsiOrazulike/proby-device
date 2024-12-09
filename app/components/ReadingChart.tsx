@@ -56,30 +56,15 @@ const getScaleConfig = (dataKey: string) => {
 
   switch (dataKey) {
     case "temperature":
-      return {
-        min: 15,
-        max: 30,
-      };
+      return { min: 15, max: 30 };
     case "humidity":
-      return {
-        min: 0,
-        max: 100,
-      };
+      return { min: 0, max: 100 };
     case "pressure":
-      return {
-        min: 900,
-        max: 1100,
-      };
+      return { min: 900, max: 1100 };
     case "voc_index":
-      return {
-        min: 0,
-        max: 4.5,
-      };
+      return { min: 0, max: 4.5 };
     case "ph":
-      return {
-        min: 0,
-        max: 8,
-      };
+      return { min: 0, max: 8 };
     default:
       return defaultScale;
   }
@@ -101,6 +86,8 @@ const getAxisLabel = (dataKey: string): string => {
       return "Value";
   }
 };
+
+const convertToHours = (minutes: number) => minutes / 60;
 
 const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
   const chartRef = useRef<HTMLCanvasElement>(null);
@@ -166,6 +153,7 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
     ];
     return mockData;
   };
+
   const getMockCO2Data = (): MockCO2Data[] => {
     const baseTime = new Date(2024, 0, 1, 0, 0, 0);
     const mockData: MockCO2Data[] = [
@@ -249,16 +237,16 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
         : dataKey === "voc_index"
         ? getMockCO2Data()
         : data;
+
     const sortedData = [...sourceData].sort(
       (a, b) =>
         new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
     );
 
     const startTime = new Date(sortedData[0].created_at).getTime();
-
     const getTimeElapsed = (timestamp: string): number => {
       const elapsed = new Date(timestamp).getTime() - startTime;
-      return Math.round(elapsed / 60000);
+      return elapsed / (60 * 1000); // Convert to minutes
     };
 
     const formattedChartData: ChartData<"line", { x: number; y: number }[]> = {
@@ -266,7 +254,10 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
         {
           label,
           data: sortedData.map((d) => ({
-            x: getTimeElapsed(d.created_at),
+            x:
+              dataKey === "ph" || dataKey === "voc_index"
+                ? getTimeElapsed(d.created_at)
+                : convertToHours(getTimeElapsed(d.created_at)),
             y: Number(d[dataKey]),
           })),
           backgroundColor: "#FF7737",
@@ -307,10 +298,13 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
         x: {
           type: "linear",
           min: 0,
-          max: dataKey === "ph" ? 75 : undefined,
+          max: dataKey === "ph" || dataKey === "voc_index" ? 75 : undefined,
           title: {
             display: true,
-            text: "Time (hours)",
+            text:
+              dataKey === "ph" || dataKey === "voc_index"
+                ? "Time (minutes)"
+                : "Time (hours)",
             color: "white",
             font: { size: 12 },
           },
@@ -348,10 +342,7 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
             },
           },
           limits: {
-            x: {
-              min: "original",
-              max: "original",
-            },
+            x: { min: "original", max: "original" },
           },
         },
         legend: {
@@ -369,8 +360,14 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
           padding: 10,
           displayColors: false,
           callbacks: {
-            title: (tooltipItems) =>
-              `Time: ${Math.round(tooltipItems[0].parsed.x)} minutes`,
+            title: (tooltipItems) => {
+              const timeValue = Math.round(tooltipItems[0].parsed.x);
+              const timeUnit =
+                dataKey === "ph" || dataKey === "voc_index"
+                  ? "minutes"
+                  : "hours";
+              return `Time: ${timeValue} ${timeUnit}`;
+            },
             label: (context) => `${context.dataset.label}: ${context.parsed.y}`,
           },
         },
@@ -396,18 +393,7 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
         <div className="md:hidden text-[#FF7737] text-sm text-center mb-2">
           ← Scroll to see more →
         </div>
-
-        <div
-          className="relative w-full py-4 overflow-x-auto 
-          overflow-y-hidden
-          touch-pan-x
-          overscroll-x-contain
-          [&::-webkit-scrollbar]:block
-          [&::-webkit-scrollbar]:h-2
-          [&::-webkit-scrollbar-track]:bg-gray-800
-          [&::-webkit-scrollbar-thumb]:bg-[#FF7737]
-          [&::-webkit-scrollbar-thumb:hover]:bg-[#FF9966]"
-        >
+        <div className="relative w-full py-4 overflow-x-auto overflow-y-hidden touch-pan-x overscroll-x-contain [&::-webkit-scrollbar]:block [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-track]:bg-gray-800 [&::-webkit-scrollbar-thumb]:bg-[#FF7737] [&::-webkit-scrollbar-thumb:hover]:bg-[#FF9966]">
           <div className="min-w-[600px] w-full">
             <div className="h-[250px] sm:h-[300px]">
               <canvas ref={chartRef} />
@@ -415,7 +401,6 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
           </div>
         </div>
       </div>
-
       <div className="w-full mt-4">
         <div className="flex justify-center">
           <button
