@@ -45,7 +45,6 @@ const Notification = ({
     const latestReading = data[0];
     const newAlerts: Alert[] = [];
 
-    // Check temperature
     if (latestReading.temperature && Number(latestReading.temperature) > 28) {
       newAlerts.push({
         id: "temperature",
@@ -56,7 +55,6 @@ const Notification = ({
       });
     }
 
-    // Check humidity
     if (latestReading.humidity && Number(latestReading.humidity) > 60) {
       newAlerts.push({
         id: "humidity",
@@ -67,7 +65,6 @@ const Notification = ({
       });
     }
 
-    // Check VOC
     if (latestReading.voc_index && Number(latestReading.voc_index) > 200) {
       newAlerts.push({
         id: "voc",
@@ -78,7 +75,6 @@ const Notification = ({
       });
     }
 
-    // Check pH
     if (
       latestReading.ph &&
       (Number(latestReading.ph) < 3 || Number(latestReading.ph) > 5)
@@ -306,7 +302,7 @@ const Notification = ({
               <h2 className="text-2xl font-bold mb-4">All Sensor Data</h2>
             </div>
             <div className="space-y-4">
-              {[...Object.keys(data[0] || {})] // Create a new array to avoid mutating the original
+              {[...Object.keys(data[0] || {})]
                 .filter((key) => key !== "id" && key !== "created_at")
                 .map((key) => {
                   const value = Number(
@@ -324,7 +320,6 @@ const Notification = ({
                   };
                 })
                 .sort((a, b) => {
-                  // Put warnings at the top
                   if (a.isWarning && !b.isWarning) return -1;
                   if (!a.isWarning && b.isWarning) return 1;
                   return 0;

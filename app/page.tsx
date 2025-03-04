@@ -16,7 +16,6 @@ export default function Home() {
   const heroRef = useRef(null);
   const problemRef = useRef(null);
   const solutionRef = useRef(null);
-  // const featuresRef = useRef(null);
   const differentiationRef = useRef(null);
   const prototypesRef = useRef(null);
 
@@ -57,7 +56,7 @@ export default function Home() {
         prototypesRef.current,
       ];
 
-      sections.forEach((section, index) => {
+      sections.forEach((section) => {
         if (!section) return;
 
         gsap.fromTo(
@@ -185,7 +184,6 @@ export default function Home() {
 
           {/* Features Section - White Background */}
           <div
-            // ref={featuresRef}
             className="bg-white text-black py-24 px-4 md:px-8 will-change-opacity"
           >
             <div className="max-w-7xl mx-auto">
@@ -432,7 +430,7 @@ export default function Home() {
                     width={800}
                     height={800}
                     className="invert rounded-xl mx-auto transform hover:scale-105 transition-transform duration-500"
-                    loading="lazy" // Lazy load images that are below the fold
+                    loading="lazy"
                   />
                 </div>
               </div>

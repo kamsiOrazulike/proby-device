@@ -10,7 +10,6 @@ interface PageLoaderProps {
   onLoadingComplete?: () => void;
 }
 
-// Memoize the progress bar component
 const ProgressBar = memo(
   ({ progress }: ProgressBarProps): React.ReactElement => (
     <div className="h-[0.09rem] w-full bg-black/10 rounded-full overflow-hidden">
@@ -34,7 +33,6 @@ const PageLoader = ({
   const [pageReady, setPageReady] = useState<boolean>(false);
   const [timedOut, setTimedOut] = useState<boolean>(false);
 
-  // Memoize the progress calculation function
   const calculateProgress = useCallback((prev: number): number => {
     if (prev < 50) {
       return Math.min(50, prev + Math.random() * 8);
@@ -50,18 +48,15 @@ const PageLoader = ({
     onLoadingComplete?.();
   }, [onLoadingComplete]);
 
-  // Check if page elements are fully rendered
   useEffect(() => {
     const checkPageReady = (): boolean => {
-      // Check if key elements are in the DOM and visible
       const mainElements = document.querySelectorAll(".main-content, canvas");
       const allElementsLoaded = mainElements.length > 0;
 
       if (allElementsLoaded) {
-        // Add a small delay to ensure everything is visible
         setTimeout(() => {
           setPageReady(true);
-        }, 800); // Extra delay after elements are detected
+        }, 800);
 
         return true;
       }
@@ -69,20 +64,18 @@ const PageLoader = ({
       return false;
     };
 
-    // Check every 200ms if the page is ready
     const readyCheckInterval = setInterval(() => {
       if (checkPageReady()) {
         clearInterval(readyCheckInterval);
       }
     }, 200);
 
-    // Set timeout for loading (10 seconds)
     const timeoutTimer = setTimeout(() => {
       clearInterval(readyCheckInterval);
 
       if (!pageReady) {
         setTimedOut(true);
-        setPageReady(true); // Force continue anyway
+        setPageReady(true);
       }
     }, 10000);
 
@@ -90,9 +83,8 @@ const PageLoader = ({
       clearInterval(readyCheckInterval);
       clearTimeout(timeoutTimer);
     };
-  }, []);
+  }, [pageReady]);
 
-  // Handle main loading logic
   useEffect(() => {
     let progressTimer: NodeJS.Timeout;
     let fadeTimer: NodeJS.Timeout;

@@ -9,7 +9,6 @@ interface SidePanelProps {
 }
 
 const SidePanel = ({ isOpen, onClose, children }: SidePanelProps) => {
-  // Prevent body scroll when panel is open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";

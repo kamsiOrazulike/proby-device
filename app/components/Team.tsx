@@ -50,7 +50,6 @@ const TeamSection = () => {
   const teamGridRef = useRef(null);
 
   useEffect(() => {
-    // Animate section on scroll
     gsap.from(sectionRef.current, {
       opacity: 0,
       y: 50,
@@ -63,7 +62,6 @@ const TeamSection = () => {
       },
     });
 
-    // Animate team members with stagger
     gsap.from(".team-member", {
       opacity: 0,
       y: 30,

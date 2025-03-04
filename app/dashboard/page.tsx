@@ -64,7 +64,7 @@ export default function Dashboard(): React.ReactNode {
     }
   }, [isLoading, activeTab]);
 
-  // Data fetching effect
+  // Data fetch
   useEffect(() => {
     const fetchData = async (): Promise<void> => {
       try {
@@ -98,7 +98,7 @@ export default function Dashboard(): React.ReactNode {
       }
     };
 
-    // Use mock data for development when fetch fails
+    //Mock data
     const useMockData = () => {
       const mockData = [
         {
