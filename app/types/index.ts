@@ -52,7 +52,6 @@ export interface ChartProps {
 export interface TeamMemberProps {
   name: string;
   title: string;
-  description: string;
   hobbies?: string;
   email: string;
   linkedin?: string;

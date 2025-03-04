@@ -87,6 +87,10 @@ const getAxisLabel = (dataKey: string): string => {
   }
 };
 
+const getChartColor = (): string => {
+  return "#FF7737";
+};
+
 const convertToHours = (minutes: number) => minutes / 60;
 
 const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
@@ -246,8 +250,10 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
     const startTime = new Date(sortedData[0].created_at).getTime();
     const getTimeElapsed = (timestamp: string): number => {
       const elapsed = new Date(timestamp).getTime() - startTime;
-      return elapsed / (60 * 1000); // Convert to minutes
+      return elapsed / (60 * 1000);
     };
+
+    const chartColor = getChartColor();
 
     const formattedChartData: ChartData<"line", { x: number; y: number }[]> = {
       datasets: [
@@ -260,11 +266,11 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
                 : convertToHours(getTimeElapsed(d.created_at)),
             y: Number(d[dataKey]),
           })),
-          backgroundColor: "#FF7737",
-          borderColor: "#FF7737",
+          backgroundColor: chartColor,
+          borderColor: chartColor,
           tension: 0.1,
-          pointBackgroundColor: "#FF7737",
-          pointBorderColor: "#FF7737",
+          pointBackgroundColor: chartColor,
+          pointBorderColor: chartColor,
           pointHoverBackgroundColor: "#FF9966",
           pointHoverBorderColor: "#FF9966",
           pointRadius: 1,
@@ -283,16 +289,16 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
           title: {
             display: true,
             text: getAxisLabel(dataKey),
-            color: "white",
+            color: "#4B5563",
             font: { size: 12 },
           },
           ticks: {
-            color: "white",
+            color: "#6B7280",
             font: { size: 11 },
             stepSize: dataKey === "ph" ? 1 : undefined,
           },
           grid: {
-            color: "rgba(255, 255, 255, 0.1)",
+            color: "rgba(229, 231, 235, 0.5)",
           },
         },
         x: {
@@ -305,17 +311,17 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
               dataKey === "ph" || dataKey === "voc_index"
                 ? "Time (hours)"
                 : "Time (hours)",
-            color: "white",
+            color: "#4B5563",
             font: { size: 12 },
           },
           ticks: {
-            color: "white",
+            color: "#6B7280",
             font: { size: 11 },
             stepSize: dataKey === "ph" ? 12 : undefined,
             callback: (value) => Math.round(Number(value)).toString(),
           },
           grid: {
-            color: "rgba(255, 255, 255, 0.1)",
+            color: "rgba(229, 231, 235, 0.5)",
           },
         },
       },
@@ -347,15 +353,15 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
         },
         legend: {
           labels: {
-            color: "white",
+            color: "#1F2937",
             font: { size: 12 },
           },
         },
         tooltip: {
-          titleColor: "white",
-          bodyColor: "white",
-          backgroundColor: "rgba(0, 0, 0, 0.8)",
-          borderColor: "#FF7737",
+          titleColor: "#1F2937",
+          bodyColor: "#1F2937",
+          backgroundColor: "rgba(255, 255, 255, 0.95)",
+          borderColor: chartColor,
           borderWidth: 1,
           padding: 10,
           displayColors: false,
@@ -363,9 +369,7 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
             title: (tooltipItems) => {
               const timeValue = Math.round(tooltipItems[0].parsed.x);
               const timeUnit =
-                dataKey === "ph" || dataKey === "voc_index"
-                  ? "hours"
-                  : "hours";
+                dataKey === "ph" || dataKey === "voc_index" ? "hours" : "hours";
               return `Time: ${timeValue} ${timeUnit}`;
             },
             label: (context) => `${context.dataset.label}: ${context.parsed.y}`,
@@ -388,12 +392,12 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
   }, [data, label, dataKey]);
 
   return (
-    <div className="w-full bg-opacity-50 rounded-lg p-4">
+    <div className="w-full p-4">
       <div className="relative w-full">
-        <div className="md:hidden text-[#FF7737] text-sm text-center mb-2">
+        <div className="md:hidden text-gray-500 text-sm text-center mb-2">
           ← Scroll to see more →
         </div>
-        <div className="relative w-full py-4 overflow-x-auto overflow-y-hidden touch-pan-x overscroll-x-contain [&::-webkit-scrollbar]:block [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-track]:bg-gray-800 [&::-webkit-scrollbar-thumb]:bg-[#FF7737] [&::-webkit-scrollbar-thumb:hover]:bg-[#FF9966]">
+        <div className="relative w-full py-4 overflow-x-auto overflow-y-hidden touch-pan-x overscroll-x-contain [&::-webkit-scrollbar]:block [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb:hover]:bg-gray-400">
           <div className="min-w-[600px] w-full">
             <div className="h-[250px] sm:h-[300px]">
               <canvas ref={chartRef} />
@@ -410,7 +414,7 @@ const ReadingChart = ({ data, label, dataKey }: ChartProps) => {
             Reset View
           </button>
         </div>
-        <div className="text-center text-white/60 text-sm py-2">
+        <div className="text-center text-gray-500 text-sm py-2">
           Last reading:{" "}
           {data.length > 0
             ? new Date(data[0].created_at).toLocaleString()

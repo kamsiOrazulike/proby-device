@@ -63,7 +63,6 @@ const ReadingCard = ({
   const isCO2Card = title === "CO2 Levels";
 
   const displayValue = isPHCard ? "3.5" : isCO2Card ? "3.2" : value;
-
   const displayUnit = isCO2Card ? "ppm/min" : unit;
 
   const numericValue = Number(displayValue);
@@ -74,67 +73,57 @@ const ReadingCard = ({
     return isOutsideThreshold(value, thresholds) ? "warning" : "normal";
   };
 
-  const getCardStyles = (alertLevel: string) => {
-    const baseStyles = "p-6 shadow-sm transition-colors duration-300";
-
-    switch (alertLevel) {
-      case "warning":
-        return `${baseStyles} bg-yellow-500/20 border border-yellow-500`;
-      case "normal":
-        return `${baseStyles} bg-green-500/20 border border-green-500`;
-      default:
-        return `${baseStyles} border border-[#FF7737] bg-transparent`;
-    }
-  };
-
-  const getTextColor = (alertLevel: string) => {
-    switch (alertLevel) {
-      case "warning":
-        return "text-yellow-500";
-      case "normal":
-        return "text-green-500";
-      default:
-        return "text-white";
-    }
-  };
-
   const alertLevel = getAlertLevel(numericValue);
-  const cardStyles = getCardStyles(alertLevel);
-  const textColor = getTextColor(alertLevel);
 
   return (
     <div className="w-full space-y-4">
-      <div className={cardStyles}>
-        <div className="flex justify-start md:justify-between items-center">
+      <div
+        className={`p-5 rounded-xl border ${
+          alertLevel === "warning"
+            ? "bg-yellow-50 border-yellow-200"
+            : "bg-green-50 border-green-200"
+        }`}
+      >
+        <div className="flex justify-between items-center">
           <div className="flex flex-col">
             <h3
-              className={`font-bold ${isLarge ? "text-3xl" : "text-md"} mb-1`}
+              className={`font-medium ${
+                isLarge ? "text-2xl" : "text-lg"
+              } text-gray-900 mb-1`}
             >
               {title}
             </h3>
-            <p className="text-white/50 text-sm font-thin">{subtitle}</p>
+            <p className="text-gray-500 text-sm">{subtitle}</p>
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="flex items-baseline gap-2">
+            <div className="flex items-baseline gap-1">
               <div
-                className={`font-bold ${
-                  isLarge ? "text-5xl" : "text-2xl"
-                } ${textColor}`}
+                className={`font-semibold ${
+                  isLarge ? "text-3xl" : "text-2xl"
+                } ${
+                  alertLevel === "warning"
+                    ? "text-yellow-600"
+                    : "text-green-600"
+                }`}
               >
                 {displayValue}
               </div>
-              <div className="text-sm opacity-75">{displayUnit}</div>
+              <div className="text-sm text-gray-500">{displayUnit}</div>
             </div>
 
             {onToggleChart && (
               <button
                 onClick={onToggleChart}
-                className="text-white/60 hover:text-white transition-colors p-2 flex items-center gap-2 text-sm"
+                className={`px-3 py-1 rounded-lg flex items-center gap-1 text-sm ${
+                  alertLevel === "warning"
+                    ? "bg-yellow-100 text-yellow-700 hover:bg-yellow-200"
+                    : "bg-green-100 text-green-700 hover:bg-green-200"
+                } transition-colors`}
               >
                 {showChart ? (
                   <>
-                    Close Chart
+                    Hide Chart
                     <AiOutlineArrowUp className="w-4 h-4" />
                   </>
                 ) : (
@@ -149,14 +138,14 @@ const ReadingCard = ({
         </div>
 
         {alertLevel === "warning" && (
-          <div className={`mt-4 text-sm ${textColor}`}>
-            {`${title} is outside optimal range`}
+          <div className="mt-3 text-sm text-yellow-600 bg-yellow-100 px-3 py-1 rounded-full inline-block">
+            Outside optimal range
           </div>
         )}
       </div>
 
       {showChart && (
-        <div className="w-full transition-all duration-300 ease-in-out">
+        <div className="w-full transition-all duration-300 ease-in-out bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
           {children}
         </div>
       )}

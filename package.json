@@ -13,6 +13,7 @@
     "@vercel/postgres": "^0.10.0",
     "chart.js": "^4.4.6",
     "chartjs-plugin-zoom": "^2.2.0",
+    "gsap": "^3.12.7",
     "next": "15.0.3",
     "react": "19.0.0-rc-66855b96-20241106",
     "react-dom": "19.0.0-rc-66855b96-20241106",
