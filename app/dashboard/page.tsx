@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 import React, { useEffect, useState, useRef } from "react";
+import dynamic from "next/dynamic";
 import { SensorReading } from "../types";
 import { ConfirmModal } from "../components/Modal";
-import gsap from "gsap";
 import PageLoader from "../components/PageLoader";
 
 // Layout Components
@@ -15,8 +16,13 @@ import PageHeader from "./components/PageHeader";
 import CurrentReadings from "./components/CurrentReadings";
 import DeviceStatus from "./components/DeviceStatus";
 import FermentationProgress from "./components/FermentationProgress";
-import DetailedAnalysis from "./components/DetailedAnalysis";
 import DeviceInfo from "./components/DeviceInfo";
+
+// Client-only components
+const DetailedAnalysis = dynamic(
+  () => import("./components/DetailedAnalysis"),
+  { ssr: false }
+);
 
 export default function Dashboard(): React.ReactNode {
   const [data, setData] = useState<SensorReading[]>([]);
@@ -33,8 +39,12 @@ export default function Dashboard(): React.ReactNode {
   const noChangeCount = useRef<number>(0);
   const uniqueIdsCount = useRef<Set<number>>(new Set<number>());
   const dashboardRef = useRef<HTMLDivElement | null>(null);
+  const [animationsEnabled, setAnimationsEnabled] = useState<boolean>(false);
 
-  // Loader timeout effect
+  useEffect(() => {
+    setAnimationsEnabled(true);
+  }, []);
+
   useEffect(() => {
     const loaderTimer = setTimeout(() => {
       setIsLoading(false);
@@ -42,27 +52,33 @@ export default function Dashboard(): React.ReactNode {
     return () => clearTimeout(loaderTimer);
   }, []);
 
-  // Dashboard animations effect
   useEffect(() => {
-    if (!isLoading && dashboardRef.current) {
-      const ctx = gsap.context(() => {
-        gsap.fromTo(
-          ".dashboard-element",
-          { opacity: 0, y: 15 },
-          {
-            opacity: 1,
-            y: 0,
-            stagger: 0.07,
-            duration: 0.6,
-            ease: "power2.out",
-            clearProps: "transform",
-          }
-        );
-      }, dashboardRef);
+    if (!isLoading && dashboardRef.current && animationsEnabled) {
+      import("gsap")
+        .then((gsapModule) => {
+          const gsap = gsapModule.default;
+          const ctx = gsap.context(() => {
+            gsap.fromTo(
+              ".dashboard-element",
+              { opacity: 0, y: 15 },
+              {
+                opacity: 1,
+                y: 0,
+                stagger: 0.07,
+                duration: 0.6,
+                ease: "power2.out",
+                clearProps: "transform",
+              }
+            );
+          }, dashboardRef);
 
-      return () => ctx.revert();
+          return () => ctx.revert();
+        })
+        .catch((e) => {
+          console.error("Failed to load GSAP:", e);
+        });
     }
-  }, [isLoading, activeTab]);
+  }, [isLoading, activeTab, animationsEnabled]);
 
   // Data fetch
   useEffect(() => {

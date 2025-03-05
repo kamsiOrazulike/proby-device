@@ -38,7 +38,7 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
   }, [activeTab]);
 
   return (
-    <div className="pt-4 pb-4">
+    <div className="pt-32 md:pt-28 pb-4">
       <div className="max-w-7xl mx-auto">
         <div className="text-sm text-gray-500 px-4 mb-2">
           Swipe to see more options
