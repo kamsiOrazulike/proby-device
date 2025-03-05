@@ -8,7 +8,6 @@ import { ConfirmModal } from "../components/Modal";
 import PageLoader from "../components/PageLoader";
 
 // Layout Components
-import Header from "./components/Header";
 import TabNavigation from "./components/TabNavigation";
 import PageHeader from "./components/PageHeader";
 
@@ -254,22 +253,11 @@ export default function Dashboard(): React.ReactNode {
         }`}
         ref={dashboardRef}
       >
-        {/* Top Navigation Bar */}
-        <Header onClearDataClick={() => setShowConfirmModal(true)} />
-
         {/* Tab Navigation */}
         <TabNavigation activeTab={activeTab} onTabChange={setActiveTab} />
 
         {/* Main Content */}
         <main className="w-full px-4 py-6 md:max-w-7xl md:mx-auto md:px-6 md:py-8">
-          {/* Page Header */}
-          <PageHeader
-            activeTab={activeTab}
-            lastUpdated={
-              data.length > 0 ? new Date().toLocaleTimeString() : "-"
-            }
-          />
-
           {/* Tab Content */}
           {renderTabContent()}
 
